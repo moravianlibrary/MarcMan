@@ -2,6 +2,7 @@
 
 // US_UseScript.cpp : Implementation of CUS_UseScript
 #include "CUseScript.h"
+#include <cstring>
 
 //MARKS
 const char BEGIN_OF_STRING=       'S';

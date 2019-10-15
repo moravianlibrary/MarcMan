@@ -2,6 +2,7 @@
 #include "CConvertor.h"
 #include "CMarcFileReader.h"
 #include <time.h>
+#include <cstring>
 
 int codeVersion;
 
@@ -135,14 +136,12 @@ int main(int argc, char* argv[])
     const char * OKFile = MyC->Variables["InRecordOKFile"]->sName->c_str();
 
     string ControlFile = "";
-    if ((licenseUserData&0x0f)!=VERSION_LIGHT)
+    //Control file
+    if (MyC->Variables.count("ControlFile")>0)
     {
-        //Control file
-            if (MyC->Variables.count("ControlFile")>0)
-            {
-                ControlFile = *(MyC->Variables["ControlFile"]->sName);
-            }             
+        ControlFile = *(MyC->Variables["ControlFile"]->sName);
     }
+
     //SourceFormat
     if (MyC->Variables.count("SourceFormat")==0)
     {

@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "CMarcAnalyzer.h"
+#include <cstring>
 
 char ISO_SUBFIELD_SEPARATOR[]         = "\x1F";
 char ISO_FIELD_SEPARATOR[]            = "\x1E";

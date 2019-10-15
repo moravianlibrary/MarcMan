@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <fcntl.h>
+#include <cstring>
 
 
 char* KEYWORD_RULESFILE=       "RulesFile";

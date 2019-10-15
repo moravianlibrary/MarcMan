@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <fcntl.h>
+#include <cstring>
 
 
 char* CUTTRIMED=                   "\n\t\r ";

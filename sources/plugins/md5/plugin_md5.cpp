@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <CMarcManPlugin.h>
+#include <cstring>
 
 extern "C" {
    #include "md5.h"

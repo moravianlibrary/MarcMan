@@ -1,6 +1,8 @@
 OPTFLAGS = -O3
 WARNFLAGS = -Wall -Wno-sign-compare
 DEPFLAGS = -MM
+CFLAGS = -fPIC
+CXXFLAGS = -fPIC
 PLATFORM = $(shell uname)
 ifeq ($(PLATFORM),OSF1)
 EXTRA_LDFLAGS = 
