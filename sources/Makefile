@@ -7,7 +7,7 @@ PLATFORM = $(shell uname)
 ifeq ($(PLATFORM),OSF1)
 EXTRA_LDFLAGS = 
 else
-EXTRA_LDFLAGS = -ldl
+EXTRA_LDFLAGS = -Wl,--no-as-needed -ldl
 endif
 
 SOURCE = CConvertor.cpp CMarcAnalyzer.cpp CMarcFileReader.cpp \
