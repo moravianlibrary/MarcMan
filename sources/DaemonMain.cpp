@@ -9,6 +9,7 @@
 #include <sys/un.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <cstdlib>
 
 #ifndef __socklen_t_defined
 #define __socklen_t_defined

@@ -5,6 +5,7 @@
 #include <map>
 #include <errno.h>
 #include "CUnicodeDatabase.h"
+#include <cstdlib>
 
 SUtf8Table CUnicodeDatabase::utf8Table[] = {
     { 0x80, 0x00, 0 * 6, 0x00000000, 0x0000007F, /* 1 byte sequence */ },
