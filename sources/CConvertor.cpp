@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <cstring>
+#include <cstdlib>
 
 
 char* KEYWORD_RULESFILE=       "RulesFile";
