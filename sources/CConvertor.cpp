@@ -15,7 +15,7 @@ char* KEYWORD_IDALEPHCODING=   "IDAlephCoding";
 char* KEYWORD_INLINKINGFIELDS= "InLinkingFields";
 char* KEYWORD_OUTLINKINGFIELDS="OutLinkingFields";
 
-int EcsapeString(string *strText,char Escape)
+int EcsapeString(std::string *strText,char Escape)
 {
     // (*log)<< "ESCAPE: " << *strText << "\n";
     for(int i=strText->length()-1;i>(-1);i--)
@@ -59,7 +59,7 @@ int EcsapeString(string *strText,char Escape)
     return 0;
 }
 
-void Replace(string* strSplit, char* findStr, char* repStr)
+void Replace(std::string* strSplit, char* findStr, char* repStr)
 {
     int Poss;
     while((Poss=strSplit->find(findStr))!=-1)
@@ -70,9 +70,9 @@ void Replace(string* strSplit, char* findStr, char* repStr)
 
 
 
-string OrdinalForm(int number, int size)
+std::string OrdinalForm(int number, int size)
 {
-    string myNumber;
+    std::string myNumber;
     char buffer[20];
 
     sprintf(buffer,"%d",number);
@@ -83,7 +83,7 @@ string OrdinalForm(int number, int size)
     return myNumber;
 }
 
-void TrimLeft(string* sStr, char* ArraySep)
+void TrimLeft(std::string* sStr, char* ArraySep)
 {
     int finds=1;
     int i;
@@ -104,21 +104,21 @@ void TrimLeft(string* sStr, char* ArraySep)
     }
 }
 
-int SplitString(string* strSplit, vector<string*>* outArray, char* Separator)
+int SplitString(std::string* strSplit, std::vector<std::string*>* outArray, char* Separator)
 {
     int iPos = 0;
     int newPos = -1;
-    string sSeparator=Separator;
+    std::string sSeparator=Separator;
     int sizeS2 = sSeparator.size();
     int isize = strSplit->size();
 
-    vector<int> positions;
+    std::vector<int> positions;
 
     newPos = strSplit->find(Separator, 0);
 
     if(newPos==(-1)) 
     {
-        outArray->push_back(new string(strSplit->substr(0)));
+        outArray->push_back(new std::string(strSplit->substr(0)));
         return 0;
     }
 
@@ -131,7 +131,7 @@ int SplitString(string* strSplit, vector<string*>* outArray, char* Separator)
 
     for(int i=0;i<=positions.size();i++)
     {
-        string s;
+        std::string s;
         if(i==0) 
         { 
             s = strSplit->substr(0, positions[i]);
@@ -151,12 +151,12 @@ int SplitString(string* strSplit, vector<string*>* outArray, char* Separator)
                 }
             }
         }
-        outArray->push_back(new string(s));
+        outArray->push_back(new std::string(s));
     }
     return 0;
 }
 
-void TrimRight(string* sStr, char* ArraySep)
+void TrimRight(std::string* sStr, char* ArraySep)
 {
     int finds=1;
     int i;
@@ -177,7 +177,7 @@ void TrimRight(string* sStr, char* ArraySep)
     }
 }
 
-void StripAsciiChars(string* sStr, const char* chars, int complement) {
+void StripAsciiChars(std::string* sStr, const char* chars, int complement) {
     
     int nchars = strlen(chars);
     int i;
@@ -197,7 +197,7 @@ void StripAsciiChars(string* sStr, const char* chars, int complement) {
     }
 }
 
-void TranslateAsciiChars(string* sStr, const char* srcChars, const char *destChars) {
+void TranslateAsciiChars(std::string* sStr, const char* srcChars, const char *destChars) {
     
     int nchars = strlen(srcChars);
     int i;
@@ -213,15 +213,15 @@ void TranslateAsciiChars(string* sStr, const char* srcChars, const char *destCha
     }
 }
 
-void GetMaxUnsignedInteger(string* sStr) {
+void GetMaxUnsignedInteger(std::string* sStr) {
     
     int i;
     int p1 = 0;
     int l1 = 0;
     int n;
     int maxVal = -1;
-    string maxStr = "";
-    string t = "";
+    std::string maxStr = "";
+    std::string t = "";
      
     for(i =0; i < sStr->size(); i++) 
     {
@@ -263,7 +263,7 @@ void GetMaxUnsignedInteger(string* sStr) {
     (*sStr) = maxStr;
 }
 
-int CConfigFileReader::ReadFile(char * sPath, map<string, M_EXPRESSION_ELEMENT*>* VIt)
+int CConfigFileReader::ReadFile(char * sPath, std::map<std::string, M_EXPRESSION_ELEMENT*>* VIt)
 {
     if (LogAll) { //Debug
         (*log)<< "---------------------------------------------\n";
@@ -273,8 +273,8 @@ int CConfigFileReader::ReadFile(char * sPath, map<string, M_EXPRESSION_ELEMENT*>
     } //End Debug
 
     FILE *fr;
-    vector<string *> Elements;
-    string strAnalyzeText;
+    std::vector<std::string *> Elements;
+    std::string strAnalyzeText;
     if ((fr=fopen(sPath,"r"))== NULL)
     {
         //(*log)<< "Soubor se nepodarilo otevrit\n";
@@ -297,15 +297,15 @@ int CConfigFileReader::ReadFile(char * sPath, map<string, M_EXPRESSION_ELEMENT*>
         {
             M_EXPRESSION_ELEMENT* NewEl = new M_EXPRESSION_ELEMENT();
             NewEl->iType=EX_STRING;
-            NewEl->sName=new string(Elements[i]->substr(Poss+1));
+            NewEl->sName=new std::string(Elements[i]->substr(Poss+1));
             TrimLeft(NewEl->sName,CUTTRIMED);
             TrimRight(NewEl->sName,CUTTRIMED);
             EcsapeString(NewEl->sName,'\\');
-            string Key =Elements[i]->substr(0,Poss);  
+            std::string Key =Elements[i]->substr(0,Poss);  
             if (LogAll) { //Debug
                 (*log)<< "NEWVAR: " << Key << "-" <<  *(NewEl->sName) << "\n";         
             } //End Debug                
-            VIt->insert(make_pair(Key,NewEl));
+            VIt->insert(std::make_pair(Key,NewEl));
         }
     }
     for (int z=0;z<Elements.size();z++)
@@ -320,7 +320,7 @@ int CConfigFileReader::ReadFile(char * sPath, map<string, M_EXPRESSION_ELEMENT*>
     return 0;
 }
 
-int ControlArguments(vector<M_EXPRESSION_ELEMENT *>* outarrElements, string mask)
+int ControlArguments(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, std::string mask)
 {
     if(outarrElements->size()==0)
     {
@@ -341,23 +341,23 @@ int ControlArguments(vector<M_EXPRESSION_ELEMENT *>* outarrElements, string mask
     return 1;
 }
 
-int VIn(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iN)
+int VIn(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iN)
 {
     return (*outarrElements)[iN]->iIntValue;
 }
 
-string* VSt(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iN)
+std::string* VSt(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iN)
 {
     return (*outarrElements)[iN]->sName;
 }
 
-int VTy(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iN)
+int VTy(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iN)
 {
     return (*outarrElements)[iN]->iType;
 }
 
 
-M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector<M_EXPRESSION_ELEMENT *>* El)
+M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, std::string* MethodName, std::vector<M_EXPRESSION_ELEMENT *>* El)
 {
 
     CConvertor * PCC = (CConvertor *) ptrClientClass;
@@ -379,7 +379,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
     } //End Debug
     M_EXPRESSION_ELEMENT * retValue=new M_EXPRESSION_ELEMENT();
     retValue->iType=EX_INTEGER;
-    retValue->sName=new string();
+    retValue->sName=new std::string();
     retValue->iIntValue=0;
     //-------------------------------------------------------------------------------------------------------
     // Try plugins
@@ -530,7 +530,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             }
             else 
             {
-                PCC->sError="TranslateAsciiChars - Lengths of translation strings don't match";
+                PCC->sError="TranslateAsciiChars - Lengths of translation std::strings don't match";
                 retValue->iType=EX_ERROR;
              }
         }    
@@ -665,8 +665,8 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             {
                 myCF = new CConfigFileReader();
                 myCF->SetLog(PCC->log,PCC->LogAll); 
-                string Adr=*(PCC->Variables["TablesDirectory"]->sName) + *(VSt(El,0));             
-                PCC->Tables.insert(make_pair(*(VSt(El,0)),myCF));
+                std::string Adr=*(PCC->Variables["TablesDirectory"]->sName) + *(VSt(El,0));             
+                PCC->Tables.insert(std::make_pair(*(VSt(El,0)),myCF));
                 if (myCF->ReadFile((char *) Adr.c_str(),&(myCF->VItems))==1)
                 {
                     PCC->sError="Invalid path to Tables Directory";
@@ -692,7 +692,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                 }
                 else
                 {
-                    string OutE="";
+                    std::string OutE="";
                     for(int i=0;i<VSt(El,1)->length();i++) {
                         OutE+="X";
                     }
@@ -724,8 +724,8 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             else
             {
                 Varb=new M_EXPRESSION_ELEMENT();
-                PCC->Variables.insert(make_pair(string(*(VSt(El,0))),Varb));
-                Varb->sName=new string("");
+                PCC->Variables.insert(std::make_pair(std::string(*(VSt(El,0))),Varb));
+                Varb->sName=new std::string("");
             }
             Varb->iType=VTy(El,1);
             if (VTy(El,1)==EX_INTEGER)
@@ -799,7 +799,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
     {    
         if (ControlArguments(El,"S"))
         {
-            string * RetS = PCC->MarcIn->ValueByCommand(VSt(El,0));
+            std::string * RetS = PCC->MarcIn->ValueByCommand(VSt(El,0));
             *(retValue->sName)= *RetS;
             retValue->iType=EX_STRING;
             delete RetS;
@@ -824,7 +824,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
     {    
         if (ControlArguments(El,"S"))
         {
-            string * RetS = PCC->MarcOut->ValueByCommand(VSt(El,0));
+            std::string * RetS = PCC->MarcOut->ValueByCommand(VSt(El,0));
             *(retValue->sName)= *RetS;
             retValue->iType=EX_STRING;
             delete RetS;
@@ -1041,7 +1041,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                 if (PCC->Arrays.count(*(VSt(El,0)))>0)
                 {
                     //smazání vsech prvku
-                    // cout <<  "Pole již existuje: "  << *(VSt(El,0));
+                    // std::cout <<  "Pole již existuje: "  << *(VSt(El,0));
                     myCF = PCC->Arrays[*(VSt(El,0))];
                     for(int j=0;j<myCF->VItems.size();j++)
                         delete myCF->VItems[j];
@@ -1050,12 +1050,12 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                 else
                 {
                     myCF = new CConfigArray();
-                    PCC->Arrays.insert(make_pair(*(VSt(El,0)),myCF));  
+                    PCC->Arrays.insert(std::make_pair(*(VSt(El,0)),myCF));  
                 }
                 for(int i=1;i<El->size();i++)
                 {
                     M_EXPRESSION_ELEMENT* NewEl=new M_EXPRESSION_ELEMENT();
-                    NewEl->sName=new string(*(VSt(El,i)));
+                    NewEl->sName=new std::string(*(VSt(El,i)));
                     NewEl->iIntValue=VIn(El,i);
                     NewEl->iType=VTy(El,i);
                     myCF->VItems.push_back(NewEl);
@@ -1089,7 +1089,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                     for(int i=1;i<El->size();i++)
                     {
                         M_EXPRESSION_ELEMENT* NewEl=new M_EXPRESSION_ELEMENT();
-                        NewEl->sName=new string(*(VSt(El,i)));
+                        NewEl->sName=new std::string(*(VSt(El,i)));
                         NewEl->iIntValue=VIn(El,i);
                         NewEl->iType=VTy(El,i);
                         myCF->VItems.push_back(NewEl);
@@ -1184,8 +1184,8 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
     {  
         if (ControlArguments(El,"SSSSS"))
         {
-            string SplitedS = *(VSt(El,0));
-            string NowCharSplited;
+            std::string SplitedS = *(VSt(El,0));
+            std::string NowCharSplited;
             int Pointer = 0;
             int Min=0;
 
@@ -1205,7 +1205,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             else
             {
                 myNA = new CConfigArray();
-                PCC->Arrays.insert(make_pair(*(VSt(El,2)),myNA));  
+                PCC->Arrays.insert(std::make_pair(*(VSt(El,2)),myNA));  
             }
             //NAjdu prislusne pole nebo ho vytvorim
             if (PCC->Arrays.count(*(VSt(El,3)))>0)
@@ -1218,7 +1218,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             else
             {
                 myNAD = new CConfigArray();
-                PCC->Arrays.insert(make_pair(*(VSt(El,3)),myNAD));  
+                PCC->Arrays.insert(std::make_pair(*(VSt(El,3)),myNAD));  
             }
             //NAjdu prislusne pole 
             if (PCC->Arrays.count(*(VSt(El,1)))>0)
@@ -1250,13 +1250,13 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                     if(Min!=100000)
                     {
                         M_EXPRESSION_ELEMENT * NewEl=new M_EXPRESSION_ELEMENT();
-                        NewEl->sName=new string("");
+                        NewEl->sName=new std::string("");
                         *(NewEl->sName)=SplitedS.substr(Pointer, Min - Pointer);
                         NewEl->iType=EX_STRING;
                         myNA->VItems.push_back(NewEl);
 
                         M_EXPRESSION_ELEMENT * NewEl2=new M_EXPRESSION_ELEMENT();
-                        NewEl2->sName=new string("");
+                        NewEl2->sName=new std::string("");
                         *(NewEl2->sName)=NowCharSplited;
                         NewEl2->iType=EX_STRING;
                         myNAD->VItems.push_back(NewEl2);
@@ -1266,13 +1266,13 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                 }
 
                 M_EXPRESSION_ELEMENT * NewEl=new M_EXPRESSION_ELEMENT();
-                NewEl->sName=new string("");
+                NewEl->sName=new std::string("");
                 *(NewEl->sName)=SplitedS.substr(Pointer);
                 NewEl->iType=EX_STRING;
                 myNA->VItems.push_back(NewEl);
 
                 M_EXPRESSION_ELEMENT * NewEl2=new M_EXPRESSION_ELEMENT();
-                NewEl2->sName=new string("");
+                NewEl2->sName=new std::string("");
                 *(NewEl2->sName)="";
                 NewEl2->iType=EX_STRING;
                 myNAD->VItems.push_back(NewEl2);
@@ -1282,24 +1282,24 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             }
             if (*(VSt(El,4))=="BYORDER")
             {                     
-                //cout << "Zacatek pole Separators velikosti " << myAD->VItems.size() << "\n";   
+                //std::cout << "Zacatek pole Separators velikosti " << myAD->VItems.size() << "\n";   
                 for(int i=0;i<myAD->VItems.size();i++)
                 {
                     int NowN = SplitedS.find(myAD->VItems[i]->sName->c_str(), Pointer);
-                    //cout << "Finding char\""<< myAD->VItems[i]->sName->c_str() << "\" Nalezeno na pozici: " << NowN << " Pointer:" << Pointer << "\n";
+                    //std::cout << "Finding char\""<< myAD->VItems[i]->sName->c_str() << "\" Nalezeno na pozici: " << NowN << " Pointer:" << Pointer << "\n";
                     if(NowN!=(-1))
                     {
                         NowCharSplited = *(myAD->VItems[i]->sName);
 
                         M_EXPRESSION_ELEMENT * NewEl=new M_EXPRESSION_ELEMENT();
-                        NewEl->sName=new string("");
+                        NewEl->sName=new std::string("");
 
                         *(NewEl->sName)=SplitedS.substr(Pointer, NowN - Pointer);
                         NewEl->iType=EX_STRING;
                         myNA->VItems.push_back(NewEl);
 
                         M_EXPRESSION_ELEMENT * NewEl2=new M_EXPRESSION_ELEMENT();
-                        NewEl2->sName=new string("");
+                        NewEl2->sName=new std::string("");
                         *(NewEl2->sName)=NowCharSplited;
                         NewEl2->iType=EX_STRING;
                         myNAD->VItems.push_back(NewEl2);
@@ -1309,13 +1309,13 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                 }
 
                 M_EXPRESSION_ELEMENT * NewEl=new M_EXPRESSION_ELEMENT();
-                NewEl->sName=new string("");
+                NewEl->sName=new std::string("");
                 *(NewEl->sName)=SplitedS.substr(Pointer);
                 NewEl->iType=EX_STRING;
                 myNA->VItems.push_back(NewEl);
 
                 M_EXPRESSION_ELEMENT * NewEl2=new M_EXPRESSION_ELEMENT();
-                NewEl2->sName=new string("");
+                NewEl2->sName=new std::string("");
                 *(NewEl2->sName)="";
                 NewEl2->iType=EX_STRING;
                 myNAD->VItems.push_back(NewEl2);
@@ -1333,13 +1333,13 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                         NowCharSplited = *(myAD->VItems[i]->sName);
 
                         M_EXPRESSION_ELEMENT * NewEl=new M_EXPRESSION_ELEMENT();
-                        NewEl->sName=new string("");
+                        NewEl->sName=new std::string("");
                         *(NewEl->sName)=SplitedS.substr(Pointer, NowN - Pointer);
                         NewEl->iType=EX_STRING;
                         myNA->VItems.push_back(NewEl);
 
                         M_EXPRESSION_ELEMENT * NewEl2=new M_EXPRESSION_ELEMENT();
-                        NewEl2->sName=new string("");
+                        NewEl2->sName=new std::string("");
                         *(NewEl2->sName)=NowCharSplited;
                         NewEl2->iType=EX_STRING;
                         myNAD->VItems.push_back(NewEl2);
@@ -1354,13 +1354,13 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                     }
                 }
                 M_EXPRESSION_ELEMENT * NewEl=new M_EXPRESSION_ELEMENT();
-                NewEl->sName=new string("");
+                NewEl->sName=new std::string("");
                 *(NewEl->sName)=SplitedS.substr(Pointer);
                 NewEl->iType=EX_STRING;
                 myNA->VItems.push_back(NewEl);
 
                 M_EXPRESSION_ELEMENT * NewEl2=new M_EXPRESSION_ELEMENT();
-                NewEl2->sName=new string("");
+                NewEl2->sName=new std::string("");
                 *(NewEl2->sName)="";
                 NewEl2->iType=EX_STRING;
                 myNAD->VItems.push_back(NewEl2);
@@ -1515,7 +1515,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
         { 
             int NumField = VIn(El,1);
             int NumSubField = VIn(El,2);
-            string Argument = *(VSt(El,3));
+            std::string Argument = *(VSt(El,3));
             if (*(VSt(El,0))=="I")
             {
                 if((NumField>(-1)) && (NumField < PCC->MarcIn->Fields.size()))
@@ -1621,7 +1621,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
         { 
             int NumField = VIn(El,1);
             int NumSubField = VIn(El,2);
-            string Argument = *(VSt(El,3));
+            std::string Argument = *(VSt(El,3));
             if (*(VSt(El,0))=="I")
             {
                 if((NumField>(-1)) && (NumField < PCC->MarcIn->Fields.size()))
@@ -1669,7 +1669,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             int NumField = VIn(El,1);
             int NumSubField = VIn(El,2);
             int NumLinkSubField = VIn(El,3);
-            string Argument = *(VSt(El,4));
+            std::string Argument = *(VSt(El,4));
             if (*(VSt(El,0))=="I")
             {
                 if((NumField>(-1)) && (NumField < PCC->MarcIn->Fields.size()))
@@ -1732,7 +1732,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             int NumField = VIn(El,1);
             int NumSubField = VIn(El,2);
             int NumLinkSubField = VIn(El,3);
-            string Argument = *(VSt(El,4));
+            std::string Argument = *(VSt(El,4));
             if (*(VSt(El,0))=="I")
             {
                 if((NumField>(-1)) && (NumField < PCC->MarcIn->Fields.size()))
@@ -1868,7 +1868,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
         FILE *fwfc;
         if (ControlArguments(El,"S"))
         {
-            string sOutF = *(VSt(El,0));	   
+            std::string sOutF = *(VSt(El,0));	   
             if ((fwfc=fopen(sOutF.c_str() ,"wb"))== NULL) { 
                 PCC->sError="ClearFile - Unable to open file '"+*(VSt(El,0))+"' for writing";   
                 retValue->iType=EX_ERROR;
@@ -1893,7 +1893,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
         FILE *fwfc;
         if (ControlArguments(El,"SS"))
         {
-            string *sRecord = 0;
+            std::string *sRecord = 0;
             int incorrectFormat = 0;
             if (*(VSt(El,1))=="text") {
                 sRecord = PCC->MarcOut->GetSerializeRecord(LOAD_TEXT_FORMAT); 
@@ -1911,7 +1911,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
             }
 
             if(!incorrectFormat) {
-                string sOutF = *(VSt(El,0));	   
+                std::string sOutF = *(VSt(El,0));	   
                 if ((fwfc=fopen(sOutF.c_str() ,"ab"))== NULL) { 
                     PCC->sError="WriteOutRecordToFile - Unable to open file '"+*(VSt(El,0))+"' for writing";   
                     retValue->iType=EX_ERROR;
@@ -2008,7 +2008,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                 Search = 1;
                 if (*(VSt(El,0))=="I")
                 {
-                    string IDField = *(VSt(El,1));
+                    std::string IDField = *(VSt(El,1));
                     for(int i=0;i<PCC->MarcIn->Fields.size();i++)
                     {
                         if(*(PCC->MarcIn->Fields[i]->ID) == IDField)
@@ -2028,7 +2028,7 @@ M_EXPRESSION_ELEMENT * CallFunc(void* ptrClientClass, string* MethodName, vector
                 }   
                 else
                 {
-                    string IDField = *(VSt(El,1));
+                    std::string IDField = *(VSt(El,1));
                     for(int i=0;i<PCC->MarcOut->Fields.size();i++)
                     {
                         if(*(PCC->MarcIn->Fields[i]->ID) == IDField)
@@ -2079,14 +2079,14 @@ exitCallFunc:
 }
 
 
-int CConvertor::SortSubfields(vector<CSubfield*>* Coll, string* Command)
+int CConvertor::SortSubfields(std::vector<CSubfield*>* Coll, std::string* Command)
 {
     int BOpen=0;
     int PointerB = 0;
     int PointerType = 0;
-    vector<string *> St;
-    vector<string *> D;
-    vector<int> DI;
+    std::vector<std::string *> St;
+    std::vector<std::string *> D;
+    std::vector<int> DI;
     int Pointer;
     int h;
     int t;
@@ -2096,7 +2096,7 @@ int CConvertor::SortSubfields(vector<CSubfield*>* Coll, string* Command)
     // (*log)<< "SortSubfields: " << *Command << "\n";
     for(i=0;i<Command->length();i++)
     {
-        string MChar = Command->substr(i, 1);
+        std::string MChar = Command->substr(i, 1);
         // (*log)<< MChar << "\n";
         if(MChar == "[")
         {
@@ -2128,7 +2128,7 @@ int CConvertor::SortSubfields(vector<CSubfield*>* Coll, string* Command)
             if (PointerB < Command->size()) 
             {
                 //(*log)<< "PUSHBACK: " << Command->substr(PointerB + 1, i - PointerB - 1) << "\n"; 
-                D.push_back(new string(Command->substr(PointerB + 1, i - PointerB - 1)));
+                D.push_back(new std::string(Command->substr(PointerB + 1, i - PointerB - 1)));
                 DI.push_back(2);
             }   
             PointerType = 0;
@@ -2143,7 +2143,7 @@ int CConvertor::SortSubfields(vector<CSubfield*>* Coll, string* Command)
             if (PointerB < Command->size()) 
             {
                 //(*log)<< "PUSHBACK: " << Command->substr(PointerB + 1, i - PointerB - 1) << "\n"; 
-                D.push_back(new string(Command->substr(PointerB + 1, i - PointerB - 1)));
+                D.push_back(new std::string(Command->substr(PointerB + 1, i - PointerB - 1)));
                 DI.push_back(1);
             }   
             PointerType = 0;
@@ -2209,7 +2209,7 @@ int CConvertor::SortSubfields(vector<CSubfield*>* Coll, string* Command)
 }
 
 
-int CConvertor::IsInS(vector<string*>* St, CSubfield* SubF)
+int CConvertor::IsInS(std::vector<std::string*>* St, CSubfield* SubF)
 {
     for(int i=0;i<St->size();i++)
     {
@@ -2228,7 +2228,7 @@ int CConvertor::IsInS(vector<string*>* St, CSubfield* SubF)
 }
 
 
-int CConvertor::ChangePossition(vector<CSubfield*>* Coll, int Poss1, int Poss2)
+int CConvertor::ChangePossition(std::vector<CSubfield*>* Coll, int Poss1, int Poss2)
 {
     CSubfield *PossSecond;
     PossSecond = (*Coll)[Poss2];
@@ -2244,7 +2244,7 @@ int CConvertor::ChangePossition(vector<CSubfield*>* Coll, int Poss1, int Poss2)
 
 
 
-void CConvertor::TrimLeft(string* sStr, char* ArraySep)
+void CConvertor::TrimLeft(std::string* sStr, char* ArraySep)
 {
     int finds=1;
     int i;
@@ -2265,7 +2265,7 @@ void CConvertor::TrimLeft(string* sStr, char* ArraySep)
     }
 }
 
-void CConvertor::TrimRight(string* sStr, char* ArraySep)
+void CConvertor::TrimRight(std::string* sStr, char* ArraySep)
 {
     int finds=1;
     int i;
@@ -2286,21 +2286,21 @@ void CConvertor::TrimRight(string* sStr, char* ArraySep)
     }
 }
 
-int CConvertor::SplitString(string* strSplit, vector<string*>* outArray, char* Separator)
+int CConvertor::SplitString(std::string* strSplit, std::vector<std::string*>* outArray, char* Separator)
 {
     int iPos = 0;
     int newPos = -1;
-    string sSeparator=Separator;
+    std::string sSeparator=Separator;
     int sizeS2 = sSeparator.size();
     int isize = strSplit->size();
 
-    vector<int> positions;
+    std::vector<int> positions;
 
     newPos = strSplit->find(Separator, 0);
 
     if(newPos==(-1)) 
     {
-        outArray->push_back(new string(strSplit->substr(0)));
+        outArray->push_back(new std::string(strSplit->substr(0)));
         return 0;
     }
 
@@ -2313,7 +2313,7 @@ int CConvertor::SplitString(string* strSplit, vector<string*>* outArray, char* S
 
     for(int i=0;i<=positions.size();i++)
     {
-        string s;
+        std::string s;
         if(i==0) 
         { 
             s = strSplit->substr(0, positions[i]);
@@ -2333,12 +2333,12 @@ int CConvertor::SplitString(string* strSplit, vector<string*>* outArray, char* S
                 }
             }
         }
-        outArray->push_back(new string(s));
+        outArray->push_back(new std::string(s));
     }
     return 0;
 }
 
-int CodeString(string * sRet)
+int CodeString(std::string * sRet)
 {
     for(int i=0;i<sRet->length();i++)
     {
@@ -2376,8 +2376,8 @@ int CConvertor::SaveCodeRulesFile(char *sPath)
 
     for (int i=0;i<RulesAnalyzer->CollRules.size();i++)
     {
-        string* OutCommand;
-        string NRule=RulesAnalyzer->CollRules[i]->Command;
+        std::string* OutCommand;
+        std::string NRule=RulesAnalyzer->CollRules[i]->Command;
         TrimLeft(&NRule,CUTTRIMED);
         TrimRight(&NRule,CUTTRIMED);
         if( NRule!="")
@@ -2395,7 +2395,7 @@ int CConvertor::SaveCodeRulesFile(char *sPath)
         }
         else
         { 
-            OutCommand=new string(" ");
+            OutCommand=new std::string(" ");
         }
 
         if (LogAll) { //Debug
@@ -2442,8 +2442,8 @@ int CConvertor::SaveCodeRulesFile(char *sPath)
 
 int CConvertor::DoneAll()
 {
-    string Emp="";
-    string AfterAll="AfterAll";
+    std::string Emp="";
+    std::string AfterAll="AfterAll";
     if (DoElement(&Emp, &AfterAll, 0, 0)) {
         sError = "After All error";
         return 1;
@@ -2460,8 +2460,8 @@ int CConvertor::LoadAll(int Code)
         (*log)<< "---------------------------------------------\n";
     } //End Debug
 
-    string Emp="";
-    string BeforeAll="BeforeAll";
+    std::string Emp="";
+    std::string BeforeAll="BeforeAll";
 
     RulesAnalyzer->SetLog(log,LogAll); 
     MarcIn->SetLog(log,0);
@@ -2485,7 +2485,7 @@ int CConvertor::LoadAll(int Code)
     }
 
     int i;
-    string* GNext;
+    std::string* GNext;
 
     CreateVariable("S",EX_STRING);
     CreateVariable("NF",EX_INTEGER); 
@@ -2509,7 +2509,7 @@ int CConvertor::LoadAll(int Code)
     }
     for (i=0;i<RulesAnalyzer->CollRules.size();i++)
     {
-        string NRule=RulesAnalyzer->CollRules[i]->Command;
+        std::string NRule=RulesAnalyzer->CollRules[i]->Command;
         TrimLeft(&NRule,CUTTRIMED);
         TrimRight(&NRule,CUTTRIMED);
         if( NRule!="")
@@ -2537,7 +2537,7 @@ int CConvertor::LoadAll(int Code)
             NewScript->gVariables=&Variables;
             NewScript->ptrClientClass=(void *) this;
             NewScript->ptrFunction=CallFunc;
-            Codes.insert(make_pair(string(OrdinalForm(i,8)),NewScript));
+            Codes.insert(std::make_pair(std::string(OrdinalForm(i,8)),NewScript));
         }
     }
 
@@ -2609,21 +2609,21 @@ int CConvertor::LoadAll(int Code)
     return 0;
 }
 
-int CConvertor::SetLog(ofstream* lg, int LogAllMes)
+int CConvertor::SetLog(std::ofstream* lg, int LogAllMes)
 {
     log=lg;
     LogAll=LogAllMes;
     return 0;
 }
 
-int CConfigFileReader::SetLog(ofstream* lg, int LogAllMes)
+int CConfigFileReader::SetLog(std::ofstream* lg, int LogAllMes)
 {
     log=lg;
     LogAll=LogAllMes;
     return 0;
 }
 
-string* CConvertor::GroupExpand(string* sText)
+std::string* CConvertor::GroupExpand(std::string* sText)
 {
     /*
        if (LogAll) { //Debug
@@ -2634,15 +2634,15 @@ string* CConvertor::GroupExpand(string* sText)
        } //End Debug*/
 
     //JE TAM GROUP A MUSIME ROZVIJET
-    vector<string *> ArrayHlp;
-    vector<string *> ArrayOut;
-    vector<string *> ArrayItems;
+    std::vector<std::string *> ArrayHlp;
+    std::vector<std::string *> ArrayOut;
+    std::vector<std::string *> ArrayItems;
 
     SplitString(sText,&ArrayHlp,",");
-    string Before;
-    string After;
-    string NameVariable;
-    string ValueVariable;
+    std::string Before;
+    std::string After;
+    std::string NameVariable;
+    std::string ValueVariable;
     int d;
 
     for (d=0;d<ArrayHlp.size();d++)
@@ -2650,18 +2650,18 @@ string* CConvertor::GroupExpand(string* sText)
         int Poss =ArrayHlp[d]->find(KEYWORD_GROUP,0);
         if(Poss==(-1)) //Neni rady group - jenom pridame
         {
-            ArrayOut.push_back(new string(*(ArrayHlp[d])));
+            ArrayOut.push_back(new std::string(*(ArrayHlp[d])));
         }
         else  //Je tu group musime rozvinout podle promenne
         {
             if(ArrayHlp[d]->substr(Poss + 5, 1)!="(")
             {         
-                return new string("");
+                return new std::string("");
             }    
             int Poss2 = ArrayHlp[d]->find(")",Poss + 5);
             if(Poss2 ==(-1)) //Chybi uzaviraci zavorka
             {
-                return new string("");
+                return new std::string("");
             }    
             NameVariable = ArrayHlp[d]->substr(Poss + 6, Poss2 - Poss - 6);
             //(*log)<< "NAME:" << NameVariable << "\n";
@@ -2669,7 +2669,7 @@ string* CConvertor::GroupExpand(string* sText)
             //Hledame promennou v globalnich promennych
             if (Variables.count(NameVariable)==0)
             {
-                return new string("");
+                return new std::string("");
             }
             ValueVariable=*(Variables[NameVariable]->sName);
             //(*log)<< "VALUE:" << ValueVariable << "\n";
@@ -2688,18 +2688,18 @@ string* CConvertor::GroupExpand(string* sText)
                 else
                     After = ArrayHlp[d]->substr(Poss2 + 1);
                 //(*log)<< "Before:" << Before << "After:" << After << "\n";   
-                string TIte = *(ArrayItems[o]);
+                std::string TIte = *(ArrayItems[o]);
                 TrimLeft(&TIte,CUTTRIMED);
                 TrimRight(&TIte,CUTTRIMED);
                 TIte = Before + TIte + After;
                 //(*log)<< "TIte " << TIte << "\n";
-                ArrayOut.push_back(new string(TIte));
+                ArrayOut.push_back(new std::string(TIte));
             }
         }
     }
     //Vyliti na vystup
 
-    string Out = "";
+    std::string Out = "";
     for (d=0;d<ArrayOut.size();d++)
     { 
         if (d!=(ArrayOut.size()-1))
@@ -2721,7 +2721,7 @@ string* CConvertor::GroupExpand(string* sText)
       (*log)<< "---------------------------------------------\n";
       } //End Debug      */     
 
-    return new string(Out); 
+    return new std::string(Out); 
 }
 
 
@@ -2740,12 +2740,12 @@ int CConvertor::DoOneRecord()
     CField* ActLinkF;
     CSubfield* ActLinkSubF;
 
-    string Emp="";
-    string Emp2="";
-    string Before="Before";
-    string After="After";
-    string LAB="LAB";
-    string Comm;
+    std::string Emp="";
+    std::string Emp2="";
+    std::string Before="Before";
+    std::string After="After";
+    std::string LAB="LAB";
+    std::string Comm;
 
     DoingLinking = 0;
     *(MarcOut->g_FieldPrefix)=*(MarcIn->g_FieldPrefix);
@@ -2825,7 +2825,7 @@ int CConvertor::DoOneRecord()
 }
 
 
-int CConvertor::DoElement(string* Value, string* Command, long iField, long iSubfield)
+int CConvertor::DoElement(std::string* Value, std::string* Command, long iField, long iSubfield)
 {
     if (LogAll) { //Debug
         (*log)<< "---------------------------------------------\n";
@@ -2836,7 +2836,7 @@ int CConvertor::DoElement(string* Value, string* Command, long iField, long iSub
         (*log)<< "iSubfield :" << iSubfield << "\n";
         (*log)<< "---------------------------------------------\n";
     } //End Debug
-    string outValue;
+    std::string outValue;
     int i;
     int IR;
     CCollRulesByC* CollR= RulesAnalyzer->GetRulesByC(Command);
@@ -2849,7 +2849,7 @@ int CConvertor::DoElement(string* Value, string* Command, long iField, long iSub
         //Element pravidla ktery opravdu potrebuji
         myRuleItem = CollR->CCollection[i]->CollRulesItem[IR];
         //Oriznuti hodnoty
-        string outValue = *Value;
+        std::string outValue = *Value;
 
         if (myRuleItem->Start > 0 && myRuleItem->Stop <= outValue.length())
             outValue = Value->substr(myRuleItem->Start-1, myRuleItem->Stop - myRuleItem->Start+1);
@@ -2880,19 +2880,19 @@ int CConvertor::ClearErrors() {
     return 0;
 }
 
-int CConvertor::CreateVariable(string Key, int iType)
+int CConvertor::CreateVariable(std::string Key, int iType)
 {
     if (Variables.count(Key)==0)
     {
         M_EXPRESSION_ELEMENT* newEl= new  M_EXPRESSION_ELEMENT();
-        newEl->sName=new string("");
+        newEl->sName=new std::string("");
         newEl->iType=iType;
-        Variables.insert(make_pair(string(Key),newEl));
+        Variables.insert(std::make_pair(std::string(Key),newEl));
     }
     return 0;
 }
 
-int CConvertor::DoRule(CUseScript* UseScript, string* sValue, string* sFrom, string* sTo, string* sCommand, long IndexRule, long iField, long iSubfield)
+int CConvertor::DoRule(CUseScript* UseScript, std::string* sValue, std::string* sFrom, std::string* sTo, std::string* sCommand, long IndexRule, long iField, long iSubfield)
 {
     if (LogAll) { //Debug
         (*log)<< "---------------------------------------------\n";
@@ -2990,7 +2990,7 @@ int CConvertor::DoRule(CUseScript* UseScript, string* sValue, string* sFrom, str
     return 0;
 }
 
-int CConvertor::InsertRecord(string* Record, int Format)
+int CConvertor::InsertRecord(std::string* Record, int Format)
 {
     if (MarcIn->OpenRecordFromString(Record,Format)) {
         sError  = MarcIn->g_Error;                                           
@@ -3030,7 +3030,7 @@ int CConvertor::Convert()
     }
     
     
-    //MarcOut->g_Label=new string("                        "); // memory leak: g_Label se inicializuje uz v konstruktoru
+    //MarcOut->g_Label=new std::string("                        "); // memory leak: g_Label se inicializuje uz v konstruktoru
     if(MarcIn->g_Error!="")
     {
         sError = MarcIn->g_Error;
@@ -3058,14 +3058,14 @@ int CConvertor::Convert()
     return 0;
 }
 
-string* CConvertor::GetOut(int Format)
+std::string* CConvertor::GetOut(int Format)
 {
-    //cout << "GET_OUT\n";
-    string* OutR= MarcOut->GetSerializeRecord(Format);    
+    //std::cout << "GET_OUT\n";
+    std::string* OutR= MarcOut->GetSerializeRecord(Format);    
     if(MarcOut->g_Error!="")
     {
         sError = MarcOut->g_Error;
-        return new string("");
+        return new std::string("");
     }    
     return OutR;
 }

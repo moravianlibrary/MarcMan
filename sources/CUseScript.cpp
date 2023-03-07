@@ -59,16 +59,16 @@ char* E_DIVISION=                 "/";
 char* E_ASSIGNING=                "=";
 
 //KEYWORDS
-const string KEYWORD_IF=       "If";
-const string KEYWORD_THEN=     "Then";
-const string KEYWORD_ELSE=     "Else";
-const string KEYWORD_ENDIF=    "Endif";
-const string KEYWORD_FOR=      "For";
-const string KEYWORD_TO=       "To";
-const string KEYWORD_NEXT=     "Next";
-const string KEYWORD_WHILE=    "While";
-const string KEYWORD_WEND=     "Wend";
-const string KEYWORD_EXIT=     "Exit";
+const std::string KEYWORD_IF=       "If";
+const std::string KEYWORD_THEN=     "Then";
+const std::string KEYWORD_ELSE=     "Else";
+const std::string KEYWORD_ENDIF=    "Endif";
+const std::string KEYWORD_FOR=      "For";
+const std::string KEYWORD_TO=       "To";
+const std::string KEYWORD_NEXT=     "Next";
+const std::string KEYWORD_WHILE=    "While";
+const std::string KEYWORD_WEND=     "Wend";
+const std::string KEYWORD_EXIT=     "Exit";
 
 
 
@@ -76,7 +76,7 @@ const string KEYWORD_EXIT=     "Exit";
  *
  * FUNCTION:     OrdinalForm
  *
- * DESCRIPTION:  Tato funkce pøevede èíslo na string doplnene nulami na delku size v ordinalni podobe napr 005
+ * DESCRIPTION:  Tato funkce pøevede èíslo na std::string doplnene nulami na delku size v ordinalni podobe napr 005
  *               Je-li size nula cislo dopleno nulami nebude.
  *
  * PARAMETERS:   (IN)	int number - cislo k prevedeni
@@ -88,28 +88,28 @@ const string KEYWORD_EXIT=     "Exit";
  *
  ***********************************************************************/
 
-int CUseScript::SetLog(ofstream* lg, int LogAllMes)
+int CUseScript::SetLog(std::ofstream* lg, int LogAllMes)
 {
 	log=lg;
 	LogAll=LogAllMes;
 	return 0;
 }
 
-int CUseScript::SplitString(string* strSplit, vector<string*>* outArray, char* Separator)
+int CUseScript::SplitString(std::string* strSplit, std::vector<std::string*>* outArray, char* Separator)
 {
 	int iPos = 0;
 	int newPos = -1;
-    string sSeparator=Separator;
+    std::string sSeparator=Separator;
 	int sizeS2 = sSeparator.size();
 	int isize = strSplit->size();
 
-	vector<int> positions;
+	std::vector<int> positions;
 
 	newPos = strSplit->find(Separator, 0);
 
     if(newPos==(-1)) 
     {
-        outArray->push_back(new string(strSplit->substr(0)));
+        outArray->push_back(new std::string(strSplit->substr(0)));
         return 0;
     }
 
@@ -122,7 +122,7 @@ int CUseScript::SplitString(string* strSplit, vector<string*>* outArray, char* S
     
 	for(int i=0;i<=positions.size();i++)
 	{
-		string s;
+		std::string s;
 		if(i==0) 
         { 
             s = strSplit->substr(0, positions[i]);
@@ -142,14 +142,14 @@ int CUseScript::SplitString(string* strSplit, vector<string*>* outArray, char* S
 			    }
 		    }
         }
-		outArray->push_back(new string(s));
+		outArray->push_back(new std::string(s));
 	}
 	return 0;
 }
 
-string CUseScript::OrdinalForm(int number, int size)
+std::string CUseScript::OrdinalForm(int number, int size)
 {
-    string myNumber;
+    std::string myNumber;
     char buffer[20];
     
     sprintf(buffer,"%d",number);
@@ -161,7 +161,7 @@ string CUseScript::OrdinalForm(int number, int size)
     return myNumber;
 }
 
-void CUseScript::TrimLeft(string* sStr, char* ArraySep)
+void CUseScript::TrimLeft(std::string* sStr, char* ArraySep)
 {
    int finds=1;
    int i;
@@ -182,7 +182,7 @@ void CUseScript::TrimLeft(string* sStr, char* ArraySep)
     }
 }
 
-void CUseScript::TrimRight(string* sStr, char* ArraySep)
+void CUseScript::TrimRight(std::string* sStr, char* ArraySep)
 {
    int finds=1;
    int i;
@@ -218,7 +218,7 @@ void CUseScript::TrimRight(string* sStr, char* ArraySep)
  *
  ***********************************************************************/
 
-int CUseScript::CopyConstArrayExpression(vector<M_EXPRESSION_ELEMENT *>* SourceArray, vector<M_EXPRESSION_ELEMENT *>* NewArray)
+int CUseScript::CopyConstArrayExpression(std::vector<M_EXPRESSION_ELEMENT *>* SourceArray, std::vector<M_EXPRESSION_ELEMENT *>* NewArray)
 {
     int i;
     M_EXPRESSION_ELEMENT *mysouEl;
@@ -234,11 +234,11 @@ int CUseScript::CopyConstArrayExpression(vector<M_EXPRESSION_ELEMENT *>* SourceA
         if (mysouEl->iType==EX_INTEGER)
         {
             mynewEl->iIntValue=mysouEl->iIntValue;
-            mynewEl->sName=new string("");
+            mynewEl->sName=new std::string("");
         }
         else
         {
-            mynewEl->sName=new string(*(mysouEl->sName));
+            mynewEl->sName=new std::string(*(mysouEl->sName));
         }
         mynewEl->iDepth=mysouEl->iDepth;
         mynewEl->iType=mysouEl->iType;
@@ -254,7 +254,7 @@ int CUseScript::CopyConstArrayExpression(vector<M_EXPRESSION_ELEMENT *>* SourceA
  * DESCRIPTION:  Serializuje pole pole trid M_PROG_NODE(uzlù programu) do citelné podoby do souboru
  *
  * PARAMETERS:   (IN)   CPtrArray * aProgNodes - pole trid M_PROG_NODE(uzlu programu)
- *               (IN)	string sFileName - Cesta k souboru do které se má pole serializovat
+ *               (IN)	std::string sFileName - Cesta k souboru do které se má pole serializovat
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
  * 
@@ -262,12 +262,12 @@ int CUseScript::CopyConstArrayExpression(vector<M_EXPRESSION_ELEMENT *>* SourceA
  *
  ***********************************************************************/
 
-void CUseScript::DebugProgNodes(vector<M_PROG_NODE *>* aProgNodes, char* sFileName)
+void CUseScript::DebugProgNodes(std::vector<M_PROG_NODE *>* aProgNodes, char* sFileName)
 {
         FILE *fw;
         if ((fw=fopen(sFileName,"w"))== NULL);
            //(*log)<< "Soubor se nepodarilo otevrit\n";
-        string myNumber;
+        std::string myNumber;
         for(int i=0;i<aProgNodes->size();i++)
         {
             M_PROG_NODE* mNode = (*aProgNodes)[i];
@@ -337,7 +337,7 @@ void CUseScript::DebugProgNodes(vector<M_PROG_NODE *>* aProgNodes, char* sFileNa
  *
  ***********************************************************************/
 
-string* CUseScript::SerializeProgNodes()
+std::string* CUseScript::SerializeProgNodes()
 {
 if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
@@ -345,7 +345,7 @@ if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
 } //End Debug    
 
-        string* outString =new string();
+        std::string* outString =new std::string();
 		int i;
 		int j;
         for(i=0;i<Code->ProgNodeArray.size();i++)
@@ -385,7 +385,7 @@ if (LogAll) { //Debug
         return outString;
 }
 
-int CUseScript::SetSerializeProgNodes(string* SerString)
+int CUseScript::SetSerializeProgNodes(std::string* SerString)
 {
 if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
@@ -398,7 +398,7 @@ if (LogAll) { //Debug
 	while( ptrSize < SerString->length() )
 	{	
 	       //prectu casti
-	       string length =	SerString->substr(ptrSize,6);	       
+	       std::string length =	SerString->substr(ptrSize,6);	       
            int ActualLength = atoi(length.c_str());
 	       if (LogAll) { (*log)<< "Size :" << ActualLength <<" \n"; }
 	       if (ActualLength == 0) {
@@ -409,36 +409,36 @@ if (LogAll) { //Debug
 	       
 	       M_PROG_NODE * NewNode = new M_PROG_NODE();
 	       //TYPE
-	       string type = SerString->substr(ptr,6);
+	       std::string type = SerString->substr(ptr,6);
            NewNode->shType = atoi(type.c_str());
 
            //TRUE JUMP
            ptr+=6;
-	       string truejump = SerString->substr(ptr,6);
+	       std::string truejump = SerString->substr(ptr,6);
            NewNode->iTrueJump = atoi(truejump.c_str());
 	       
 	       //FALSE JUMP
            ptr+=6;
-	       string falsejump = SerString->substr(ptr,6);
+	       std::string falsejump = SerString->substr(ptr,6);
            NewNode->iFalseJump = atoi(falsejump.c_str());
 	       
 	       //LENGHT COMMAND
 	       ptr+=6;
-	       string lengthCommand = SerString->substr(ptr,6);
+	       std::string lengthCommand = SerString->substr(ptr,6);
            int CommandLength = atoi(lengthCommand.c_str());
 	       
 	       //LENGHT QUESTION
 	       ptr+=6;
-	       string lengthQuestion = SerString->substr(ptr,6);
+	       std::string lengthQuestion = SerString->substr(ptr,6);
            int QuestionLength = atoi(lengthQuestion.c_str());
 	       
 	       //COMMAND
 	       ptr+=6;
-	       NewNode->sCommand = new string(SerString->substr(ptr,CommandLength));
+	       NewNode->sCommand = new std::string(SerString->substr(ptr,CommandLength));
 	       
 	       //QUESTION
 	       ptr+=CommandLength;
-	       NewNode->sQuestion = new string(SerString->substr(ptr,QuestionLength));
+	       NewNode->sQuestion = new std::string(SerString->substr(ptr,QuestionLength));
 	       
 	       Code->ProgNodeArray.push_back(NewNode);
 	       
@@ -471,7 +471,7 @@ if (LogAll) { //Debug
  * DESCRIPTION:  Serializuje pole trid M_EXPRESSION_ELEMENT(entit výrazu) do citelné podoby do souboru
  *
  * PARAMETERS:   (IN)   CPtrArray * outarrElements - pole trid 
- *               (IN)	string sFileName - Cesta k souboru do které se má pole serializovat
+ *               (IN)	std::string sFileName - Cesta k souboru do které se má pole serializovat
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
  * 
@@ -480,13 +480,13 @@ if (LogAll) { //Debug
  ***********************************************************************/
 
 
-void CUseScript::DebugExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements, char* sFileName)
+void CUseScript::DebugExpression(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, char* sFileName)
 {
     
        FILE *fw;
         if ((fw=fopen(sFileName,"w"))== NULL);
            //(*log)<< "Soubor se nepodarilo otevrit\n";
-        string myNumber;
+        std::string myNumber;
 
         for(int i=0;i<outarrElements->size();i++)
         {
@@ -546,11 +546,11 @@ void CUseScript::DebugExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements,
  * FUNCTION:     MarkSections
  *
  * DESCRIPTION:  funkce vezme analyzovany text a vyhleda v nìm èásti zaèínající chBegin a konèící chEnd a oznaèí
- *               je ve stejnì dlouhém stringu strMark identifikatory chMarkBegin a chMarkEnd. Je-li promenna iInsertField
+ *               je ve stejnì dlouhém std::stringu strMark identifikatory chMarkBegin a chMarkEnd. Je-li promenna iInsertField
  *               1 oznaèí se vcetne konecneho chEnd
  *
- * PARAMETERS:   (IN)   string* strAnalyzeText - analyzovany text
- *               (OUT)	string* strMarks - oznaèkovaný text
+ * PARAMETERS:   (IN)   std::string* strAnalyzeText - analyzovany text
+ *               (OUT)	std::string* strMarks - oznaèkovaný text
  *               (IN)	char chBegin - hledaný zaèátek
  *               (IN)	char chEnd - hledaný konec
  *               (IN)	char chMarkBegin - znacka zacatku
@@ -563,7 +563,7 @@ void CUseScript::DebugExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements,
  *
  ***********************************************************************/
 
-int CUseScript::MarkSections(string* strAnalyzeText, string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
+int CUseScript::MarkSections(std::string* strAnalyzeText, std::string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
 {
     int iCounter=0;
     int iPossitionStart;
@@ -601,13 +601,13 @@ int CUseScript::MarkSections(string* strAnalyzeText, string* strMarks, char chBe
  * FUNCTION:     MarkKeyword
  *
  * DESCRIPTION:  funkce vezme analyzovany text a vyhleda v nìm slovo sSearchString a oznaèí
- *               je ve stejnì dlouhém stringu strMark identifikatory chMarkBegin a chMarkEnd.
+ *               je ve stejnì dlouhém std::stringu strMark identifikatory chMarkBegin a chMarkEnd.
  *               Klíèové slovo oznaèí pouze v pøípadì, že se v jeho bezprostøedním okolí nachází
  *               pouze znaky z množiny chNeib.
  *
- * PARAMETERS:   (IN)   string* strAnalyzeText - analyzovany text
- *               (OUT)	string* strMarks - oznaèkovaný text
- *               (IN)	string sSearchString - hledaný zaèátek
+ * PARAMETERS:   (IN)   std::string* strAnalyzeText - analyzovany text
+ *               (OUT)	std::string* strMarks - oznaèkovaný text
+ *               (IN)	std::string sSearchString - hledaný zaèátek
  *               (IN)	char chMarkBegin - znacka zacatku
  *               (IN)	char chMarkEnd - znacka konce
  *               (IN)	char* chNeib - množina znakù, které se mohou kolem klíèového slova nacházet
@@ -618,15 +618,15 @@ int CUseScript::MarkSections(string* strAnalyzeText, string* strMarks, char chBe
  *
  ***********************************************************************/
 
-int CUseScript::MarkKeyword(string* strAnalyzeText, string* strMarks, string sSearchString, char chMarkBegin,  char chMarkEnd, char* chNeib)
+int CUseScript::MarkKeyword(std::string* strAnalyzeText, std::string* strMarks, std::string sSearchString, char chMarkBegin,  char chMarkEnd, char* chNeib)
 {
     int iCounter=0;
     int iPossitionStart;
     int iPossitionStop;
     int iPossitionStartSpace;
     int iPossitionStopSpace;
-    string strWithSpaces;
-    string BeforeS;
+    std::string strWithSpaces;
+    std::string BeforeS;
     while (iCounter<strAnalyzeText->length())
     {
         iPossitionStart=strAnalyzeText->find(sSearchString,iCounter);
@@ -664,10 +664,10 @@ int CUseScript::MarkKeyword(string* strAnalyzeText, string* strMarks, string sSe
  * FUNCTION:     MarkSigns
  *
  * DESCRIPTION:  funkce vezme analyzovany text a vyhleda v nìm retezec *sign(tøeba +,-,&&) a oznaèí
- *               je ve stejnì dlouhém stringu strMark identifikatory chMarkSign.
+ *               je ve stejnì dlouhém std::stringu strMark identifikatory chMarkSign.
  *
- * PARAMETERS:   (IN)   string* strAnalyzeText - analyzovany text
- *               (OUT)	string* strMarks - oznaèkovaný text
+ * PARAMETERS:   (IN)   std::string* strAnalyzeText - analyzovany text
+ *               (OUT)	std::string* strMarks - oznaèkovaný text
  *               (IN)	char *sign- hledané znamínko
  *               (IN)	char chMarkSign - znacka retezce
  *
@@ -678,9 +678,9 @@ int CUseScript::MarkKeyword(string* strAnalyzeText, string* strMarks, string sSe
  ***********************************************************************/
 
 
-int CUseScript::MarkSigns(string* strAnalyzeText, string* strMark, char *sign, char chMarkSign)
+int CUseScript::MarkSigns(std::string* strAnalyzeText, std::string* strMark, char *sign, char chMarkSign)
 {
-    string strSigns=sign;
+    std::string strSigns=sign;
     int iCounter=0;
     int iPossitionStart;
     int i;
@@ -697,7 +697,7 @@ int CUseScript::MarkSigns(string* strAnalyzeText, string* strMark, char *sign, c
     return 0;
 }
 
-int EscapeToInt(string Text)
+int EscapeToInt(std::string Text)
 {
     int Sor=8;
     int Rad=2;
@@ -779,7 +779,7 @@ int EscapeToInt(string Text)
     return Returned;
 }
 
-int CUseScript::EcsapeString(string *strText,char Escape)
+int CUseScript::EcsapeString(std::string *strText,char Escape)
 {
     // (*log)<< "ESCAPE: " << *strText << "\n";
      for(int i=strText->length()-1;i>(-1);i--)
@@ -835,7 +835,7 @@ int CUseScript::EcsapeString(string *strText,char Escape)
  *
  ***********************************************************************/
 
-int CUseScript::EscapeSequention(string* strAnalyzeText, string* strMark, char MarkString, char Escape)
+int CUseScript::EscapeSequention(std::string* strAnalyzeText, std::string* strMark, char MarkString, char Escape)
 {
     for(int i=strMark->length()-1;i>(-1);i--)
         if ((*strMark)[i]==MarkString)
@@ -891,7 +891,7 @@ int CUseScript::EscapeSequention(string* strAnalyzeText, string* strMark, char M
  *               sekce zaèínající chMarkBegin a konèící chMarkEnd charem chMarkBegin.Pøi C,N by
  *               vysledek byl XXXXXXXCCCCCCCCCCXXXXNXX
  *
- * PARAMETERS:   (OUT)	string* strMarks - oznaèkovaný text
+ * PARAMETERS:   (OUT)	std::string* strMarks - oznaèkovaný text
  *               (IN)	char chMarkBegin - hledaný zaèátek
  *               (IN)	char chMarkEnd - hledaný konec
  *
@@ -901,7 +901,7 @@ int CUseScript::EscapeSequention(string* strAnalyzeText, string* strMark, char M
  *
  ***********************************************************************/
 
-int CUseScript::FillMarkSection(string* strMark, char chMarkBegin,  char chMarkEnd)
+int CUseScript::FillMarkSection(std::string* strMark, char chMarkBegin,  char chMarkEnd)
 {
     int iPossitionStart;
     int iPossitionStop;    
@@ -934,11 +934,11 @@ int CUseScript::FillMarkSection(string* strMark, char chMarkBegin,  char chMarkE
  *
  * FUNCTION:     DeleteSection
  *
- * DESCRIPTION:  funkce vezme analyzovaný text a tam kde jsou v markovaném stringu 
- *               znamínka rovna chMarkSection smaže jak v analyzovaném tak markovacím stringu 
+ * DESCRIPTION:  funkce vezme analyzovaný text a tam kde jsou v markovaném std::stringu 
+ *               znamínka rovna chMarkSection smaže jak v analyzovaném tak markovacím std::stringu 
  *
- * PARAMETERS:   (IN)   string* strAnalyzeText - analyzovaný text
- *               (OUT)	string* strMarks - omarkovaný string
+ * PARAMETERS:   (IN)   std::string* strAnalyzeText - analyzovaný text
+ *               (OUT)	std::string* strMarks - omarkovaný std::string
  *               (IN)	char chMarkSection - hledaná znaèka
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
@@ -947,7 +947,7 @@ int CUseScript::FillMarkSection(string* strMark, char chMarkBegin,  char chMarkE
  *
  ***********************************************************************/
 
-int CUseScript::DeleteSection(string* strAnalyzeText, string* strMarks, char chMarkSection)
+int CUseScript::DeleteSection(std::string* strAnalyzeText, std::string* strMarks, char chMarkSection)
 {
     for(int i=strMarks->length()-1;i>(-1);i--)
         if ((*strMarks)[i]==chMarkSection)
@@ -964,15 +964,15 @@ int CUseScript::DeleteSection(string* strAnalyzeText, string* strMarks, char chM
  * FUNCTION:     SeparateLines
  *
  * DESCRIPTION:  funkce vezme analyzovaný a omarkovaný text a vytvoøí pole analyzovaných
- *               a omarkovaných vzájemnì si odpovídajících stringù splitovaných podle jednoho ze znakù v
+ *               a omarkovaných vzájemnì si odpovídajících std::stringù splitovaných podle jednoho ze znakù v
  *               chLineSeparators
  *
- * PARAMETERS:   (OUT)   stringArray* arroutLines - vysledne pole
- *               (OUT)	 stringArray* arroutMarkLines - vysledne pole
- *               (IN)	 string* strAnalyzeText - analyzovaný text
- *               (IN)	 string* strMark - omarkovaný text
+ * PARAMETERS:   (OUT)   std::stringArray* arroutLines - vysledne pole
+ *               (OUT)	 std::stringArray* arroutMarkLines - vysledne pole
+ *               (IN)	 std::string* strAnalyzeText - analyzovaný text
+ *               (IN)	 std::string* strMark - omarkovaný text
  *               (IN)    char * chLineSeparators - separatory podle kterých se bude splitovat
- *               (IN)    char chEmpty - znak niceho v markovacím stringu
+ *               (IN)    char chEmpty - znak niceho v markovacím std::stringu
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
  * 
@@ -980,13 +980,13 @@ int CUseScript::DeleteSection(string* strAnalyzeText, string* strMarks, char chM
  *
  ***********************************************************************/
 
-void CUseScript::SeparateLines(vector<string *> *arroutLines, vector<string *> *arroutMarkLines,  string* strAnalyzeText, string* strMark, char * chLineSeparators, char chEmpty)
+void CUseScript::SeparateLines(std::vector<std::string *> *arroutLines, std::vector<std::string *> *arroutMarkLines,  std::string* strAnalyzeText, std::string* strMark, char * chLineSeparators, char chEmpty)
 {
     int iPossitionStart;
     int iDefinitivePossitionStart;
     int iLastPossition=0;
     int iCounter=0;
-    string strSeparators=chLineSeparators;
+    std::string strSeparators=chLineSeparators;
     while (iCounter<strAnalyzeText->length())
     {
         iDefinitivePossitionStart=-1;
@@ -1004,9 +1004,9 @@ void CUseScript::SeparateLines(vector<string *> *arroutLines, vector<string *> *
 
         if ((*strMark)[iDefinitivePossitionStart]==chEmpty)
         {
-            string* NewStr=new string(strAnalyzeText->substr(iLastPossition,iDefinitivePossitionStart-iLastPossition));
+            std::string* NewStr=new std::string(strAnalyzeText->substr(iLastPossition,iDefinitivePossitionStart-iLastPossition));
             arroutLines->push_back(NewStr);
-            string* NewStr2= new string(strMark->substr(iLastPossition,iDefinitivePossitionStart-iLastPossition));
+            std::string* NewStr2= new std::string(strMark->substr(iLastPossition,iDefinitivePossitionStart-iLastPossition));
             arroutMarkLines->push_back(NewStr2);
             iLastPossition=iDefinitivePossitionStart+1;
         }
@@ -1015,9 +1015,9 @@ void CUseScript::SeparateLines(vector<string *> *arroutLines, vector<string *> *
         
     }
 
-    string* NewH=new string(strAnalyzeText->substr(iLastPossition,strAnalyzeText->length()-iLastPossition));
+    std::string* NewH=new std::string(strAnalyzeText->substr(iLastPossition,strAnalyzeText->length()-iLastPossition));
     arroutLines->push_back(NewH);
-    string* NewH2=new string(strMark->substr(iLastPossition,strMark->length()-iLastPossition));
+    std::string* NewH2=new std::string(strMark->substr(iLastPossition,strMark->length()-iLastPossition));
     arroutMarkLines->push_back(NewH2);
 }
 
@@ -1026,13 +1026,13 @@ void CUseScript::SeparateLines(vector<string *> *arroutLines, vector<string *> *
  * FUNCTION:     CutCommandByType
  *
  * DESCRIPTION:  funkce vezme analyzovaný a omarkovaný text a vytvoøí pole analyzovaných
- *               stringù a markovacích stringù délky jedna. Funkce analyzovaný text dìlí podle 
- *               identifikovaných sekcí vzniklých vyplnìním markovacího stringu
+ *               std::stringù a markovacích std::stringù délky jedna. Funkce analyzovaný text dìlí podle 
+ *               identifikovaných sekcí vzniklých vyplnìním markovacího std::stringu
  *
- * PARAMETERS:   (IN)    string* strCommand - analyzovaný text
- *               (IN)	 string* strMarkCommand -omarkovaný text
- *               (OUT)	 stringArray *ptrElements - jednotlivé èásti analyzovaného textu podle sekcí
- *               (IN)	 stringArray *ptrMarkElements - markovací stringy délky jedna oznaèující typ sekce
+ * PARAMETERS:   (IN)    std::string* strCommand - analyzovaný text
+ *               (IN)	 std::string* strMarkCommand -omarkovaný text
+ *               (OUT)	 std::stringArray *ptrElements - jednotlivé èásti analyzovaného textu podle sekcí
+ *               (IN)	 std::stringArray *ptrMarkElements - markovací std::stringy délky jedna oznaèující typ sekce
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
  * 
@@ -1040,12 +1040,12 @@ void CUseScript::SeparateLines(vector<string *> *arroutLines, vector<string *> *
  *
  ***********************************************************************/
 
-void CUseScript::CutCommandByType(string* strCommand, string* strMarkCommand, vector<string *> *ptrElements, vector<string *> *ptrMarkElements)
+void CUseScript::CutCommandByType(std::string* strCommand, std::string* strMarkCommand, std::vector<std::string *> *ptrElements, std::vector<std::string *> *ptrMarkElements)
 {
     char chLastChar='J';
     char chNowChar;
     int iElementCounter=-1;
-    string newChar;
+    std::string newChar;
 
     for (int i=0;i<strMarkCommand->length();i++)
     {
@@ -1054,14 +1054,14 @@ void CUseScript::CutCommandByType(string* strCommand, string* strMarkCommand, ve
         {
             iElementCounter++;
             newChar=(*strCommand)[i];
-            ptrElements->push_back(new string(newChar));
+            ptrElements->push_back(new std::string(newChar));
             newChar=(*strMarkCommand)[i];
-            ptrMarkElements->push_back(new string(newChar));
+            ptrMarkElements->push_back(new std::string(newChar));
             chLastChar=chNowChar;
         }
         else
         {
-            string* ptrStr;
+            std::string* ptrStr;
             ptrStr =(*ptrElements)[iElementCounter];
             *ptrStr+=(*strCommand)[i];
             (*ptrElements)[iElementCounter]= ptrStr;
@@ -1075,7 +1075,7 @@ void CUseScript::CutCommandByType(string* strCommand, string* strMarkCommand, ve
  *
  * DESCRIPTION:  funkce vrátí index dalšího výskytu sekce typu FindMark v poli ptrMarkElements
  *
- * PARAMETERS:   (IN)    stringArray *ptrMarkElements - markovací stringy delky jedna
+ * PARAMETERS:   (IN)    std::stringArray *ptrMarkElements - markovací std::stringy delky jedna
  *               (IN)	 int Index - index od kterého se má zaèít
  *               (IN)	 char FindMark - hledaný typ sekce
  *
@@ -1089,16 +1089,16 @@ void CUseScript::CutCommandByType(string* strCommand, string* strMarkCommand, ve
  ***********************************************************************/
 
 
-int CUseScript::NextCommand(vector<string *> *ptrMarkElements, int Index, char FindMark)
+int CUseScript::NextCommand(std::vector<std::string *> *ptrMarkElements, int Index, char FindMark)
 {
-    string sFindMark;
+    std::string sFindMark;
     for(int i=Index;i<ptrMarkElements->size();i++)
     {
     /*    (*log)<< "<NextCommand>\n";
         (*log)<< *(*ptrMarkElements)[i] + "\n" ;
         (*log)<< FindMark;
         (*log)<< "\n<NextCommand>\n";         */
-        string* my=(*ptrMarkElements)[i];
+        std::string* my=(*ptrMarkElements)[i];
         if ((*my)[0]==FindMark)
         {
             return i;
@@ -1112,11 +1112,11 @@ int CUseScript::NextCommand(vector<string *> *ptrMarkElements, int Index, char F
  *
  * DESCRIPTION:  funkce spojí sekce od indexu IndexBegin do indexu IndexEnd a vráti je jako retezec
  *
- * PARAMETERS:   (IN)    stringArray *ptrElements - pole sekcí
+ * PARAMETERS:   (IN)    std::stringArray *ptrElements - pole sekcí
  *               (IN)	 int IndexBegin - index od kterého se má zaèít
  *               (IN)	 int IndexEnd - index konce
  *
- * RETURNED:     string - slouèený øetìzec
+ * RETURNED:     std::string - slouèený øetìzec
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
  * 
@@ -1124,9 +1124,9 @@ int CUseScript::NextCommand(vector<string *> *ptrMarkElements, int Index, char F
  *
  ***********************************************************************/
 
-string* CUseScript::JoinSections(vector<string *> *ptrElements, int IndexBegin, int IndexEnd)
+std::string* CUseScript::JoinSections(std::vector<std::string *> *ptrElements, int IndexBegin, int IndexEnd)
 {
-    string* OutString=new string("");
+    std::string* OutString=new std::string("");
     int i;
     for(i=IndexBegin;i<IndexEnd;i++)
     {
@@ -1142,8 +1142,8 @@ string* CUseScript::JoinSections(vector<string *> *ptrElements, int IndexBegin, 
  * DESCRIPTION:  funkce pøidá do pole aProgNodes uzly programu z øádky programu
  *
  * PARAMETERS:   (OUT)  CPtrArray *aProgNodes - pole sekcí
- *               (IN)   string* strCommand - jedna øádka kódu
- *               (IN)   string* strMarkCommand - omarkovaná jedna øádka kódu
+ *               (IN)   std::string* strCommand - jedna øádka kódu
+ *               (IN)   std::string* strMarkCommand - omarkovaná jedna øádka kódu
  *
  * RETURNED:     0 - OK
  *               1 - FALSE
@@ -1154,17 +1154,17 @@ string* CUseScript::JoinSections(vector<string *> *ptrElements, int IndexBegin, 
  *
  ***********************************************************************/
 
-int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCommand, string* strMarkCommand)
+int CUseScript::NodesFromLines(std::vector<M_PROG_NODE *> *aProgNodes, std::string* strCommand, std::string* strMarkCommand)
 {
-    vector<string *> aElements;
-    vector<string *> aMarkElements;
+    std::vector<std::string *> aElements;
+    std::vector<std::string *> aMarkElements;
     
-    string* sTrim;
-    string* TempString;
+    std::string* sTrim;
+    std::string* TempString;
     //rozsekam podle typu
     CutCommandByType(strCommand,strMarkCommand,&aElements,&aMarkElements);
 
-    //odstranim prazdne stringy
+    //odstranim prazdne std::stringy
     int i;
 
     for (i=aElements.size()-1; i > (-1);i--)
@@ -1212,7 +1212,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             }
 
             newNode->sQuestion=JoinSections(&aElements,1,NextC); //Mezi if a then
-            newNode->sCommand=new string("");
+            newNode->sCommand=new std::string("");
             if (*(newNode->sQuestion)=="") //Prázná otázka
             {
                 intError=ERR_EMPTY_QUESTION;
@@ -1243,7 +1243,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                 M_PROG_NODE* newNodeNext = new M_PROG_NODE; //Neco tam je vytvorime novy radek programu
                 aProgNodes->push_back(newNodeNext);
                 newNodeNext->sCommand = TempString;
-                newNodeNext->sQuestion=new string("");
+                newNodeNext->sQuestion=new std::string("");
                 newNodeNext->shType = D_COMMAND;
                 newNode->shType=D_IF_WITH_THEN_AND_ELSE ;
                 
@@ -1262,7 +1262,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                 M_PROG_NODE* newNodeNextNext = new M_PROG_NODE; //Neco tam je vytvorime novy radek programu
                 aProgNodes->push_back(newNodeNextNext);
                 newNodeNextNext->sCommand = TempString;
-                newNodeNextNext->sQuestion=new string("");
+                newNodeNextNext->sQuestion=new std::string("");
                 newNodeNextNext->shType = D_COMMAND;
             }
             else
@@ -1273,7 +1273,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                     M_PROG_NODE* newNodeNext = new M_PROG_NODE;
                     aProgNodes->push_back(newNodeNext);
                     newNodeNext->sCommand = TempString;
-                    newNodeNext->sQuestion = new string("");
+                    newNodeNext->sQuestion = new std::string("");
                     newNode->shType=D_IF_WITH_THEN;
                 }
                 else
@@ -1295,7 +1295,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                 intLineError=aProgNodes->size();
                 return 1;
             }
-            string *JS=JoinSections(&aElements,1,aElements.size());
+            std::string *JS=JoinSections(&aElements,1,aElements.size());
             if (*JS!="")
             {
                delete JS;
@@ -1305,8 +1305,8 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             }
             delete JS;
             newNode->shType=D_ELSE;
-            newNode->sCommand=new string("");
-            newNode->sQuestion=new string("");
+            newNode->sCommand=new std::string("");
+            newNode->sQuestion=new std::string("");
         }
 
         //END IF
@@ -1326,7 +1326,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                 intLineError=aProgNodes->size();
                 return 1;
             }
-            string *JS=JoinSections(&aElements,1,aElements.size());
+            std::string *JS=JoinSections(&aElements,1,aElements.size());
             if (*JS!="")
             {
                delete JS;
@@ -1336,8 +1336,8 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             }
             delete JS;
             newNode->shType=D_ENDIF;
-            newNode->sCommand=new string("");
-            newNode->sQuestion=new string("");
+            newNode->sCommand=new std::string("");
+            newNode->sQuestion=new std::string("");
         }
 
         //FOR
@@ -1361,7 +1361,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
 
             newNode->sCommand=JoinSections(&aElements,1,NextC); //Mezi For a To Pred samotnym forem jeste inicializacni radek
             newNode->shType=D_COMMAND;
-            newNode->sQuestion=new string("");
+            newNode->sQuestion=new std::string("");
 
             if (*(newNode->sCommand)=="") //Prázná otázka
             {
@@ -1393,7 +1393,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             aProgNodes->push_back(newNodeNext);
             newNodeNext->shType=D_FOR;
             newNodeNext->sQuestion=TempString; 
-            newNodeNext->sCommand=new string("");
+            newNodeNext->sCommand=new std::string("");
         }
 
         //NEXT
@@ -1414,7 +1414,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                 intLineError=aProgNodes->size();
                 return 1;
             }
-            string* JS=JoinSections(&aElements,1,aElements.size());
+            std::string* JS=JoinSections(&aElements,1,aElements.size());
             if (*JS!="")
             {
                delete JS;
@@ -1424,8 +1424,8 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             }
             delete JS;
             newNode->shType=D_NEXT;
-            newNode->sCommand=new string("");
-            newNode->sQuestion=new string("");
+            newNode->sCommand=new std::string("");
+            newNode->sQuestion=new std::string("");
         }
 
 
@@ -1452,7 +1452,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
 
             newNode->sQuestion=TempString;
             newNode->shType=D_WHILE;
-            newNode->sCommand=new string("");
+            newNode->sCommand=new std::string("");
         }
 
         //WEND
@@ -1474,7 +1474,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                 intLineError=aProgNodes->size();
                 return 1;
             }
-            string * JS= JoinSections(&aElements,1,aElements.size());
+            std::string * JS= JoinSections(&aElements,1,aElements.size());
             if (*JS!="")
             {
                delete JS;
@@ -1484,8 +1484,8 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             }
             delete JS;
             newNode->shType=D_WEND;
-            newNode->sCommand=new string("");
-            newNode->sQuestion=new string("");
+            newNode->sCommand=new std::string("");
+            newNode->sQuestion=new std::string("");
         }
         //EXIT
         if (*(aElements[0])==KEYWORD_EXIT)
@@ -1506,7 +1506,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
                 return 1;
             }
 
-            string * JS=JoinSections(&aElements,1,aElements.size());
+            std::string * JS=JoinSections(&aElements,1,aElements.size());
             if (*JS!="")
             {
                delete JS;
@@ -1516,8 +1516,8 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             }
             delete JS;
             newNode->shType=D_EXIT;
-            newNode->sCommand=new string("");
-            newNode->sQuestion=new string("");
+            newNode->sCommand=new std::string("");
+            newNode->sQuestion=new std::string("");
         }
 
     }
@@ -1530,7 +1530,7 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
             aProgNodes->push_back(newNode);
             newNode->shType=D_COMMAND; 
             newNode->sCommand =TempString; 
-            newNode->sQuestion=new string("");
+            newNode->sQuestion=new std::string("");
             }
        else
             {
@@ -1555,8 +1555,8 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
  * DESCRIPTION:  funkce poslupne volá funkci NodesFromLines pro každý øádek kódu a vyhazuje prázné øádky
  *
  * PARAMETERS:   (OUT)  CPtrArray *aProgNodes - pole uzlù programu
- *               (IN)   stringArray* aLines - pole øádkù kódu
- *               (IN)   stringArray *aMarkLines - pole omarkovaných øádkù kódu
+ *               (IN)   std::stringArray* aLines - pole øádkù kódu
+ *               (IN)   std::stringArray *aMarkLines - pole omarkovaných øádkù kódu
  *
  * RETURNED:     0 - OK
  *               1 - FALSE
@@ -1567,11 +1567,11 @@ int CUseScript::NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCom
  *
  ***********************************************************************/
 
-int CUseScript::MakeNodes(vector<M_PROG_NODE *> *aProgNodes, vector<string *>* aLines, vector<string *> *aMarkLines)
+int CUseScript::MakeNodes(std::vector<M_PROG_NODE *> *aProgNodes, std::vector<std::string *>* aLines, std::vector<std::string *> *aMarkLines)
 {
    for (int i=0;i<aLines->size();i++)
     {
-        string sLine=*((*aLines)[i]);
+        std::string sLine=*((*aLines)[i]);
         TrimLeft(&sLine,TRIMED);
         TrimRight(&sLine,TRIMED);
         if (sLine!="")
@@ -1589,7 +1589,7 @@ int CUseScript::MakeNodes(vector<M_PROG_NODE *> *aProgNodes, vector<string *>* a
  *
  ***********************************************************************/
 
-M_PROG_NODE* CUseScript::GetPtrNode(vector<M_PROG_NODE *>* aProgNodes, int iIndex)
+M_PROG_NODE* CUseScript::GetPtrNode(std::vector<M_PROG_NODE *>* aProgNodes, int iIndex)
 {
     M_PROG_NODE* pActualNode = (M_PROG_NODE*) (*aProgNodes)[iIndex];
     return pActualNode;
@@ -1612,10 +1612,10 @@ M_PROG_NODE* CUseScript::GetPtrNode(vector<M_PROG_NODE *>* aProgNodes, int iInde
  *
  ***********************************************************************/
 
-int CUseScript::LinkNodes(vector<M_PROG_NODE *> *aProgNodes)
+int CUseScript::LinkNodes(std::vector<M_PROG_NODE *> *aProgNodes)
 {
-    vector<int> aStack;
-    vector<int> aStackTypes;
+    std::vector<int> aStack;
+    std::vector<int> aStackTypes;
     int iNode;
     int i;
 
@@ -1642,7 +1642,7 @@ int CUseScript::LinkNodes(vector<M_PROG_NODE *> *aProgNodes)
                 pActualNode->iFalseJump=i+2;
                 pNextNode = GetPtrNode(aProgNodes,i+1);
                 delete pNextNode->sQuestion;
-                pNextNode->sQuestion=new string("1");
+                pNextNode->sQuestion=new std::string("1");
                 pNextNode->iTrueJump=i+3; 
 				pNextNode->iFalseJump=0; 
 				i++;
@@ -1675,7 +1675,7 @@ int CUseScript::LinkNodes(vector<M_PROG_NODE *> *aProgNodes)
                 iNode=aStack[aStackTypes.size()-1];
                 pForNode = GetPtrNode(aProgNodes,iNode);
                 delete pActualNode->sQuestion;
-                pActualNode->sQuestion=new string("1");
+                pActualNode->sQuestion=new std::string("1");
                 pActualNode->iTrueJump=iNode; 
                 pForNode->iTrueJump=iNode+1;
                 pForNode->iFalseJump=i+1;
@@ -1698,7 +1698,7 @@ int CUseScript::LinkNodes(vector<M_PROG_NODE *> *aProgNodes)
                 iNode=aStack[aStackTypes.size()-1];
                 pWhileNode = GetPtrNode(aProgNodes,iNode);
                 delete pActualNode->sQuestion;
-                pActualNode->sQuestion=new string("1");
+                pActualNode->sQuestion=new std::string("1");
                 pActualNode->iTrueJump=iNode; 
                 pWhileNode->iTrueJump=iNode+1;
                 pWhileNode->iFalseJump=i+1;
@@ -1760,7 +1760,7 @@ int CUseScript::LinkNodes(vector<M_PROG_NODE *> *aProgNodes)
                     pIfNode->iTrueJump=iIfNode+1;
                     pIfNode->iFalseJump=iElseNode+1;
                     delete pElseNode->sQuestion;
-                    pElseNode->sQuestion=new string("1");
+                    pElseNode->sQuestion=new std::string("1");
                     pElseNode->iTrueJump=i+1; 
                     aStack.pop_back();
                     aStackTypes.pop_back();
@@ -1772,7 +1772,7 @@ int CUseScript::LinkNodes(vector<M_PROG_NODE *> *aProgNodes)
             case D_EXIT:
                 pActualNode->iTrueJump=100000;
                 delete pActualNode->sQuestion;
-                pActualNode->sQuestion=new string("1");
+                pActualNode->sQuestion=new std::string("1");
                 break;
         }
     }
@@ -1792,7 +1792,7 @@ int CUseScript::LinkNodes(vector<M_PROG_NODE *> *aProgNodes)
  *
  ***********************************************************************/
 
-M_EXPRESSION_ELEMENT* CUseScript::AddNextExpresionElement(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, string* Name)
+M_EXPRESSION_ELEMENT* CUseScript::AddNextExpresionElement(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, std::string* Name)
 {
     M_EXPRESSION_ELEMENT* myElement=new M_EXPRESSION_ELEMENT;
     myElement->iDepth =Depth;
@@ -1808,13 +1808,13 @@ M_EXPRESSION_ELEMENT* CUseScript::AddNextExpresionElement(vector<M_EXPRESSION_EL
  *
  ***********************************************************************/
 
-M_EXPRESSION_ELEMENT* CUseScript::AddNextExpresionIntElement(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, int intValue)
+M_EXPRESSION_ELEMENT* CUseScript::AddNextExpresionIntElement(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, int intValue)
 {
     M_EXPRESSION_ELEMENT* myElement=new M_EXPRESSION_ELEMENT;
     myElement->iDepth =Depth;
     myElement->iType = Type;
     myElement->iIntValue = intValue;
-    myElement->sName = new string("");
+    myElement->sName = new std::string("");
     outarrElements->push_back(myElement);
     return myElement;
 }
@@ -1827,7 +1827,7 @@ M_EXPRESSION_ELEMENT* CUseScript::AddNextExpresionIntElement(vector<M_EXPRESSION
  *
  * PARAMETERS:   (OUT)  CPtrArray * outarrElements - pole elementù(M_EXPRESSION_ELEMENT) výrazu
  *               (OUT)  int* MaxDepth - maximální nalazené závorkové vnoøení napø. ((sd)) by bylo 2            
- *               (IN)  string* sExpression - analyzovaný výraz
+ *               (IN)  std::string* sExpression - analyzovaný výraz
  *
  * RETURNED:     0 - OK
  *               1 - FALSE
@@ -1838,20 +1838,20 @@ M_EXPRESSION_ELEMENT* CUseScript::AddNextExpresionIntElement(vector<M_EXPRESSION
  *
  ***********************************************************************/
 
-int CUseScript::AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int* MaxDepth, string* sExpression)
+int CUseScript::AnalyzeExpression(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int* MaxDepth, std::string* sExpression)
 {
-    string strMarkExp;
-    string* m;
-    vector<string *> arrMarkElements;
-    vector<string *> arrElements;
+    std::string strMarkExp;
+    std::string* m;
+    std::vector<std::string *> arrMarkElements;
+    std::vector<std::string *> arrElements;
     int i;
-    //Vyrobit markovaci string
+    //Vyrobit markovaci std::string
     for(i=0;i<sExpression->length();i++)
             strMarkExp+="x";
-    //Oznacit stringy
+    //Oznacit std::stringy
     MarkSections(sExpression,&strMarkExp,'"','"',BEGIN_OF_STRING,END_OF_STRING,1);
     
-    //Odstarnit mezery ale ne ve stringach
+    //Odstarnit mezery ale ne ve std::stringach
     int CutOn=1;
 
     for(i=sExpression->length()-1;i>(-1);i--)
@@ -1883,7 +1883,7 @@ int CUseScript::AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements
     MarkSigns(sExpression,&strMarkExp,E_MULTIPLICATION,MARK_MULTIPLICATION);
     MarkSigns(sExpression,&strMarkExp,E_DIVISION,MARK_DIVISION);
 
-    //vyplnit stringy
+    //vyplnit std::stringy
     FillMarkSection(&strMarkExp,BEGIN_OF_STRING,END_OF_STRING);
     //rozssekani
     CutCommandByType(sExpression,&strMarkExp,&arrElements,&arrMarkElements);
@@ -1896,7 +1896,7 @@ int CUseScript::AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements
         switch ((*(arrMarkElements[i]))[0])
         {
         case BEGIN_OF_STRING:
-            m=new string(arrElements[i]->substr(1,arrElements[i]->length()-2));
+            m=new std::string(arrElements[i]->substr(1,arrElements[i]->length()-2));
             AddNextExpresionElement(outarrElements,ActualDepth,EX_STRING,m);
             break;
         case MARK_LEFT_PARENTHESIS:   
@@ -1913,7 +1913,7 @@ int CUseScript::AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements
             }
             break;
         case MARK_ASSIGNING:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_ASSIGNING,new string(""));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_ASSIGNING,new std::string(""));
             break;
         case MARK_COMMA:
             if (ActualDepth-1<0)
@@ -1922,37 +1922,37 @@ int CUseScript::AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements
                intLineError=i;
                return 1;
             }
-            AddNextExpresionElement(outarrElements,ActualDepth-1,EX_COMMA,new string(""));
+            AddNextExpresionElement(outarrElements,ActualDepth-1,EX_COMMA,new std::string(""));
             break;
         case MARK_EQUAL:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_EQUAL));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_EQUAL));
             break;
         case MARK_GREATER:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_GREATER));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_GREATER));
             break;
         case MARK_LESS:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_LESS));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_LESS));
             break;
         case MARK_NOEQUALS:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_NOEQUALS));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_NOEQUALS));
             break;
         case MARK_AND:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_AND));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_AND));
             break;
         case MARK_OR:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_OR));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_OR));
             break;
         case MARK_PLUS:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_PLUS));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_PLUS));
             break;
         case MARK_MINUS:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_MINUS));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_MINUS));
             break;
         case MARK_MULTIPLICATION:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_MULTIPLICATION));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_MULTIPLICATION));
             break;
         case MARK_DIVISION:
-            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new string(E_DIVISION));
+            AddNextExpresionElement(outarrElements,ActualDepth,EX_OPERATOR,new std::string(E_DIVISION));
             break;
         case UNRECOGNIZED:
             int tNumber=atoi(arrElements[i]->c_str());
@@ -1963,7 +1963,7 @@ int CUseScript::AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements
                 else    //je to promenna nebo nazev funkce
                 {
                 if (i==arrElements.size()-1) //je to promenna
-                   AddNextExpresionElement(outarrElements,ActualDepth,EX_VARIABLE,new string(*(arrElements[i])));
+                   AddNextExpresionElement(outarrElements,ActualDepth,EX_VARIABLE,new std::string(*(arrElements[i])));
                 else
                    if ((*(arrMarkElements[i+1]))[0]==MARK_LEFT_PARENTHESIS) //je to funkce
                       if (i==arrElements.size()-2)
@@ -1974,13 +1974,13 @@ int CUseScript::AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements
                         }
                       else
                         if ((*(arrMarkElements[i+2]))[0]==MARK_RIGHT_PARENTHESIS)
-                            AddNextExpresionElement(outarrElements,ActualDepth,EX_EMPTYMETHOD,new string(*(arrElements[i])));
+                            AddNextExpresionElement(outarrElements,ActualDepth,EX_EMPTYMETHOD,new std::string(*(arrElements[i])));
                         else
-                            AddNextExpresionElement(outarrElements,ActualDepth,EX_METHOD,new string(*(arrElements[i])));
+                            AddNextExpresionElement(outarrElements,ActualDepth,EX_METHOD,new std::string(*(arrElements[i])));
                          
                    else //je to promenna
                       {
-                      AddNextExpresionElement(outarrElements,ActualDepth,EX_VARIABLE,new string(*(arrElements[i])));
+                      AddNextExpresionElement(outarrElements,ActualDepth,EX_VARIABLE,new std::string(*(arrElements[i])));
                        }
                 }
             }
@@ -2056,7 +2056,7 @@ if (LogAll) { //Debug
  * DESCRIPTION:  funkce nastaví hodnotu promenné uložených v asociativním poli gVariables
  *               v pøípadì že neexistuje, založí ji a dá ji defaultní hosnotu.
  *
- * PARAMETERS:   (IN)  string ValueName - element v jehož sName je nazev promenne
+ * PARAMETERS:   (IN)  std::string ValueName - element v jehož sName je nazev promenne
  *               (IN)  M_EXPRESSION_ELEMENT* pValue - element v nemž je uložena nová hodnota
  *
  * RETURNED:     0 - OK
@@ -2068,7 +2068,7 @@ if (LogAll) { //Debug
  *
  ***********************************************************************/
 
-int CUseScript::SetVariableValue(string* ValueName, M_EXPRESSION_ELEMENT* pValue)
+int CUseScript::SetVariableValue(std::string* ValueName, M_EXPRESSION_ELEMENT* pValue)
 {
     M_EXPRESSION_ELEMENT* Varb;
 
@@ -2088,8 +2088,8 @@ int CUseScript::SetVariableValue(string* ValueName, M_EXPRESSION_ELEMENT* pValue
     else
     {
         Varb=new M_EXPRESSION_ELEMENT();
-        gVariables->insert(make_pair(string(*ValueName),Varb));
-        Varb->sName=new string("");
+        gVariables->insert(std::make_pair(std::string(*ValueName),Varb));
+        Varb->sName=new std::string("");
     }
     Varb->iType=pValue->iType;
     if (pValue->iType==EX_INTEGER)
@@ -2111,7 +2111,7 @@ int CUseScript::SetVariableValue(string* ValueName, M_EXPRESSION_ELEMENT* pValue
  * DESCRIPTION:  funncke provede operaci mezi One Two a vysledek uloží do Two
  *
  * PARAMETERS:   (IN)  M_EXPRESSION_ELEMENT* One - element 1
- *               (IN)  string Operator - operator
+ *               (IN)  std::string Operator - operator
  *               (IN/OUT)  M_EXPRESSION_ELEMENT* Two - element 2
  *
  * RETURNED:     0 - OK
@@ -2124,7 +2124,7 @@ int CUseScript::SetVariableValue(string* ValueName, M_EXPRESSION_ELEMENT* pValue
  ***********************************************************************/
 
 
-int CUseScript::CalculateOperation(M_EXPRESSION_ELEMENT* One, string Operator, M_EXPRESSION_ELEMENT* Two)
+int CUseScript::CalculateOperation(M_EXPRESSION_ELEMENT* One, std::string Operator, M_EXPRESSION_ELEMENT* Two)
 {
     //Result
     //Prelozeni promennych na hodnoty
@@ -2311,25 +2311,25 @@ int CUseScript::CalculateOperation(M_EXPRESSION_ELEMENT* One, string Operator, M
  * pomocné funkce
  ***********************************************************************/
 
-int CUseScript::GetExpElementType(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
+int CUseScript::GetExpElementType(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
 {
     M_EXPRESSION_ELEMENT* pActualNode = (*outarrElements)[iIndex];
     return pActualNode->iType;
 }
 
-string* CUseScript::GetExpElementName(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
+std::string* CUseScript::GetExpElementName(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
 {
     M_EXPRESSION_ELEMENT* pActualNode = (*outarrElements)[iIndex];
     return pActualNode->sName;
 }
 
-int CUseScript::IntExpElementDepth(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
+int CUseScript::IntExpElementDepth(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
 {
     M_EXPRESSION_ELEMENT* pActualNode = (*outarrElements)[iIndex];
     return pActualNode->iDepth;
 }
 
-int CUseScript::GetExpElementIntValue(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
+int CUseScript::GetExpElementIntValue(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex)
 {
     M_EXPRESSION_ELEMENT* pActualNode = (*outarrElements)[iIndex];
     return pActualNode->iIntValue;
@@ -2357,7 +2357,7 @@ int CUseScript::GetExpElementIntValue(vector<M_EXPRESSION_ELEMENT *> *outarrElem
  *
  ***********************************************************************/
 
-int CUseScript::SectionCalculateByOperator(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex, char *Operator1, char *Operator2, int *Removed)
+int CUseScript::SectionCalculateByOperator(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex, char *Operator1, char *Operator2, int *Removed)
 {
     M_EXPRESSION_ELEMENT* myElement1;
     M_EXPRESSION_ELEMENT* myElement2;
@@ -2411,7 +2411,7 @@ int CUseScript::SectionCalculateByOperator(vector<M_EXPRESSION_ELEMENT *> *outar
  *
  ***********************************************************************/
 
-int CUseScript::SectionCalculate(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex)
+int CUseScript::SectionCalculate(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex)
 {
     int iRemoved=EndIndex;
     //calcutate by operator priority
@@ -2431,7 +2431,7 @@ int CUseScript::SectionCalculate(vector<M_EXPRESSION_ELEMENT *> *outarrElements,
  *               parametrù. Návratovou hodnotu v prvním prvku kolekce vrací jako
  *               M_EXPRESSION_ELEMENT
  *
- * PARAMETERS:   (IN)  string MethodName - název volané funkce
+ * PARAMETERS:   (IN)  std::string MethodName - název volané funkce
  *               (IN)  CPtrArray * arguments - pole argumentù funcke
  *
  * RETURNED:     M_EXPRESSION_ELEMENT hodnota vrácená funkcí
@@ -2442,7 +2442,7 @@ int CUseScript::SectionCalculate(vector<M_EXPRESSION_ELEMENT *> *outarrElements,
  *
  ***********************************************************************/
 
-M_EXPRESSION_ELEMENT* CUseScript::CallMethod(string* MethodName, vector<M_EXPRESSION_ELEMENT *>* arguments)
+M_EXPRESSION_ELEMENT* CUseScript::CallMethod(std::string* MethodName, std::vector<M_EXPRESSION_ELEMENT *>* arguments)
 {
     return ptrFunction(ptrClientClass, MethodName,arguments);
 }
@@ -2468,9 +2468,9 @@ M_EXPRESSION_ELEMENT* CUseScript::CallMethod(string* MethodName, vector<M_EXPRES
  *
  ***********************************************************************/
 
-int CUseScript::CompileMethod(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int BeginSection, int EndSection,int *Removed)
+int CUseScript::CompileMethod(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int BeginSection, int EndSection,int *Removed)
 {
-    vector<M_EXPRESSION_ELEMENT *> MethodArgArray;
+    std::vector<M_EXPRESSION_ELEMENT *> MethodArgArray;
     int i;
     int j;
 
@@ -2578,7 +2578,7 @@ int CUseScript::CompileMethod(vector<M_EXPRESSION_ELEMENT *>* outarrElements, in
  *
  ***********************************************************************/
 
-int CUseScript::GetNextSection(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iDepth, int* BeginSection, int* EndSection)
+int CUseScript::GetNextSection(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iDepth, int* BeginSection, int* EndSection)
 {
     int iDepthLast=-1;
 
@@ -2626,7 +2626,7 @@ int CUseScript::GetNextSection(vector<M_EXPRESSION_ELEMENT *>* outarrElements, i
  ***********************************************************************/
 
 
-int CUseScript::ProcessExpression(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iDepth)
+int CUseScript::ProcessExpression(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iDepth)
 {
     int IsComma;
     int IsAssign=0;
@@ -2680,7 +2680,7 @@ int CUseScript::ProcessExpression(vector<M_EXPRESSION_ELEMENT *> *outarrElements
                 M_EXPRESSION_ELEMENT* myNewEl=new M_EXPRESSION_ELEMENT;
                 myNewEl->iDepth=iDepth;
                 myNewEl->iIntValue=0;
-                myNewEl->sName=new string("");
+                myNewEl->sName=new std::string("");
                 myNewEl->iType=EX_INTEGER; 
                 outarrElements->insert(outarrElements->begin()+BeginSection,myNewEl);
                 EndSection++;
@@ -2754,7 +2754,7 @@ int CUseScript::ProcessExpression(vector<M_EXPRESSION_ELEMENT *> *outarrElements
  *
  ***********************************************************************/
 
-int CUseScript::PrepareNodes(vector<M_PROG_NODE *> *aProgNodes)
+int CUseScript::PrepareNodes(std::vector<M_PROG_NODE *> *aProgNodes)
 {
 if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
@@ -2817,7 +2817,7 @@ if (LogAll) { //Debug
                intError=ERR_UNDEFINED;
                return 1;
             }
-            string* mVariable=GetExpElementName(&(PNode->CommandExpression),0);
+            std::string* mVariable=GetExpElementName(&(PNode->CommandExpression),0);
             PNode2->sCommand->append(*(mVariable) + E_ASSIGNING + *(mVariable) + E_PLUS + "1");
             (*PNode2->sQuestion)=(*(mVariable) + E_LESS + *(PNode2->sQuestion) + E_PLUS + "1");
         }
@@ -2844,7 +2844,7 @@ if (LogAll) { //Debug
  *
  ***********************************************************************/
 
-int CUseScript::Execute(vector<M_PROG_NODE *>* aProgNodes)
+int CUseScript::Execute(std::vector<M_PROG_NODE *>* aProgNodes)
 {
  intError=0;
 if (LogAll) { //Debug
@@ -2854,7 +2854,7 @@ if (LogAll) { //Debug
 } //End Debug
 
     M_PROG_NODE* PNode;
-    vector<M_EXPRESSION_ELEMENT *> ActualExpression;
+    std::vector<M_EXPRESSION_ELEMENT *> ActualExpression;
     int iJump=0;
     
     while(iJump<aProgNodes->size())
@@ -2928,14 +2928,14 @@ if (LogAll) { //Debug
 // CUseScript
 
 
-int CUseScript::MarkCode(string *strAnalyzeText, string *strMark)
+int CUseScript::MarkCode(std::string *strAnalyzeText, std::string *strMark)
 {
     int i;
     *strMark="";
     for(i=0;i<strAnalyzeText->length();i++)
             (*strMark)+=UNRECOGNIZED;
     //(*log)<< *strMark;
-    //komentáøe, stringy
+    //komentáøe, std::stringy
     MarkSections(strAnalyzeText,strMark,'\'','\n',BEGIN_OF_COMMENT,END_OF_COMMENT,0);
     MarkSections(strAnalyzeText,strMark,'"','"',BEGIN_OF_STRING,END_OF_STRING,1);
     //klíèová slova
@@ -2975,9 +2975,9 @@ int CUseScript::MarkCode(string *strAnalyzeText, string *strMark)
     return 0;
 }
 
-string CUseScript::GetStringError()
+std::string CUseScript::GetStringError()
 {
-    string outStr;
+    std::string outStr;
     switch(intError)
     {
     case 0:  outStr="OK"; break;
@@ -3009,14 +3009,14 @@ string CUseScript::GetStringError()
     return outStr;
 }
 
-int CUseScript::SetCode(string* sCode, int NoPrepare)
+int CUseScript::SetCode(std::string* sCode, int NoPrepare)
 {
     int i;
-    vector<string *> aLines;
-    vector<string *> aMarkLines;
+    std::vector<std::string *> aLines;
+    std::vector<std::string *> aMarkLines;
 
-    Code->sCode = new string(*sCode);
-    Code->sMarkCode = new string("");
+    Code->sCode = new std::string(*sCode);
+    Code->sMarkCode = new std::string("");
 
     //priprava kodu
     MarkCode(Code->sCode,Code->sMarkCode);

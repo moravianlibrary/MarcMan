@@ -8,36 +8,36 @@ int codeVersion;
 
 int main(int argc, char* argv[])
 {
-    ofstream log;
+    std::ofstream log;
     if (argc==1)
         {
-        cerr << "\n";
-        cerr << "\n";
-        cerr << "--------------------------------------------\n";
-        cerr << "MarcMan " << MARCMAN_VERSION << " - conversion library formats    \n";
-        cerr << "--------------------------------------------\n";
+        std::cerr << "\n";
+        std::cerr << "\n";
+        std::cerr << "--------------------------------------------\n";
+        std::cerr << "MarcMan " << MARCMAN_VERSION << " - conversion library formats    \n";
+        std::cerr << "--------------------------------------------\n";
 #ifdef ADMIN_VERSION
-        cerr << "Administration version \n";
-        cerr << "Working with coded and plain configuration files\n";
-        cerr << "Creating coded files \n"; 
+        std::cerr << "Administration version \n";
+        std::cerr << "Working with coded and plain configuration files\n";
+        std::cerr << "Creating coded files \n"; 
 #endif  
-        cerr << "--------------------------------------------\n";
-        cerr << "\n";          
-        cerr << "********************************************\n";
-        cerr << "* Multidata Praha s.r.o.                   *\n";
-        cerr << "* Sircova 202                              *\n"; 
-        cerr << "* 196 00 Praha 9                           *\n"; 
-        cerr << "* tel.: 283931741, 603259479, 603824881    *\n"; 
-        cerr << "* -----------------                        *\n";
-        cerr << "* Jindrich.Stejskal@ruk.cuni.cz            *\n";
-        cerr << "********************************************\n";
-        cerr << "\n";
-        cerr << "ARGUMENT 1: Config file\n";
+        std::cerr << "--------------------------------------------\n";
+        std::cerr << "\n";          
+        std::cerr << "********************************************\n";
+        std::cerr << "* Multidata Praha s.r.o.                   *\n";
+        std::cerr << "* Sircova 202                              *\n"; 
+        std::cerr << "* 196 00 Praha 9                           *\n"; 
+        std::cerr << "* tel.: 283931741, 603259479, 603824881    *\n"; 
+        std::cerr << "* -----------------                        *\n";
+        std::cerr << "* Jindrich.Stejskal@ruk.cuni.cz            *\n";
+        std::cerr << "********************************************\n";
+        std::cerr << "\n";
+        std::cerr << "ARGUMENT 1: Config file\n";
 #ifdef ADMIN_VERSION
-        cerr << "(ARGUMENT 2): Out code configuration file\n";
+        std::cerr << "(ARGUMENT 2): Out code configuration file\n";
 #endif  
-        cerr << "\n";
-        cerr << "\n";
+        std::cerr << "\n";
+        std::cerr << "\n";
 		return 1;
         }
         
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
     
     if (MyConfFile->ReadFile(argv[1],&(MyC->Variables)))
     {
-       cerr << "ERROR_ReadFile:" << argv[1] << "\n";
+       std::cerr << "ERROR_ReadFile:" << argv[1] << "\n";
        return 0;
     }
 
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     {
         if(CodeFile!=1)
         {
-            cerr << "This version works only with coded files\n";
+            std::cerr << "This version works only with coded files\n";
             return 0;
         }
         MyC->SetLog(&log,0);
@@ -96,17 +96,17 @@ int main(int argc, char* argv[])
     {
         if (MyC->SaveCodeRulesFile(argv[2]))
         {
-              cerr << "Error coding file\n";
+              std::cerr << "Error coding file\n";
               return 0;    
         }     
-        cerr << "OK - file created\n";
+        std::cerr << "OK - file created\n";
         return 0; 
     }
     
     //source file
     if (MyC->Variables.count("SourceFile")==0)
     {
-        cerr << "ERROR_Config:" << "SourceFile not set" << "\n"; 
+        std::cerr << "ERROR_Config:" << "SourceFile not set" << "\n"; 
         return 1;
     }             
     const char * SourceFile = MyC->Variables["SourceFile"]->sName->c_str();
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
     //destination file
     if (MyC->Variables.count("DestinationFile")==0)
     {
-        cerr << "ERROR_Config:" << "DestinationFile not set" << "\n"; 
+        std::cerr << "ERROR_Config:" << "DestinationFile not set" << "\n"; 
         return 1;
     }             
     const char * DestinationFile = MyC->Variables["DestinationFile"]->sName->c_str();    
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
     //file for error input records
     if (MyC->Variables.count("InRecordErrorFile")==0)
     {
-        cerr << "ERROR_Config:" << "InRecordErrorFile not set" << "\n"; 
+        std::cerr << "ERROR_Config:" << "InRecordErrorFile not set" << "\n"; 
         return 1;
     }             
     const char * ErrorFile = MyC->Variables["InRecordErrorFile"]->sName->c_str();
@@ -130,12 +130,12 @@ int main(int argc, char* argv[])
     //file for OK input records
     if (MyC->Variables.count("InRecordOKFile")==0)
     {
-        cerr << "ERROR_Config:" << "InRecordOKFile not set" << "\n"; 
+        std::cerr << "ERROR_Config:" << "InRecordOKFile not set" << "\n"; 
         return 1;
     }             
     const char * OKFile = MyC->Variables["InRecordOKFile"]->sName->c_str();
 
-    string ControlFile = "";
+    std::string ControlFile = "";
     //Control file
     if (MyC->Variables.count("ControlFile")>0)
     {
@@ -145,20 +145,20 @@ int main(int argc, char* argv[])
     //SourceFormat
     if (MyC->Variables.count("SourceFormat")==0)
     {
-        cerr << "ERROR_Config:" << "SourceFormat not set" << "\n"; 
+        std::cerr << "ERROR_Config:" << "SourceFormat not set" << "\n"; 
         return 1;
     }       
     int SFormat=0;      
-    string SourceFormat = *(MyC->Variables["SourceFormat"]->sName);    
+    std::string SourceFormat = *(MyC->Variables["SourceFormat"]->sName);    
 
     //DestinationFormat
     if (MyC->Variables.count("DestinationFormat")==0)
     {
-        cerr << "ERROR_Config:" << "DestinationFormat not set" << "\n"; 
+        std::cerr << "ERROR_Config:" << "DestinationFormat not set" << "\n"; 
         return 1;
     }             
     int DFormat=0;
-    string DestinationFormat = *(MyC->Variables["DestinationFormat"]->sName);        
+    std::string DestinationFormat = *(MyC->Variables["DestinationFormat"]->sName);        
     
     if (SourceFormat=="iso") SFormat=1;
     if (SourceFormat=="txt") SFormat=2;
@@ -170,17 +170,17 @@ int main(int argc, char* argv[])
     
     if(SFormat==0)
     {
-        cout << "ERROR_Config:" << "SourceFormat invalid set" << "\n"; 
+        std::cout << "ERROR_Config:" << "SourceFormat invalid set" << "\n"; 
         return 1;
     }
     
     if(DFormat==0)
     {
-        cout << "ERROR_Config:" << "DestinationFormat invalid set" << "\n"; 
+        std::cout << "ERROR_Config:" << "DestinationFormat invalid set" << "\n"; 
         return 1;
     }
     //lang
-    string Lang="ENG";
+    std::string Lang="ENG";
     if (MyC->Variables.count("Language"))
     {
         Lang = *(MyC->Variables["Language"]->sName);
@@ -190,33 +190,33 @@ int main(int argc, char* argv[])
     MyFR->OpenFile((char*) SourceFile,SFormat);
     if (MyFR->g_Error!="")
     {
-        cerr << "ERROR_OPEN_SOURCE_FILE:" << MyFR->g_Error << "\n"; 
+        std::cerr << "ERROR_OPEN_SOURCE_FILE:" << MyFR->g_Error << "\n"; 
         return 1;
     }    
-    cout << "OK: " << MyFR->GetCountRecords() << " Records opened" << "\n"; 
+    std::cout << "OK: " << MyFR->GetCountRecords() << " Records opened" << "\n"; 
     log << "OK: " << MyFR->GetCountRecords() << " Records opened" << "\n"; 
     if ((fw=fopen((char*) DestinationFile,"wb"))== NULL)
     {
-        cerr << "ERROR_OPEN_DESTINATION_FILE:" << "Not open" << "\n"; 
+        std::cerr << "ERROR_OPEN_DESTINATION_FILE:" << "Not open" << "\n"; 
         return 1;
     }   
     
     if ((fwerr=fopen((char*) ErrorFile,"wb"))== NULL)
     {
-        cerr << "ERROR_OPEN_ERROR_FILE:" << "Not open" << "\n"; 
+        std::cerr << "ERROR_OPEN_ERROR_FILE:" << "Not open" << "\n"; 
         return 1;
     }
     
     if ((fwOK=fopen((char*) OKFile,"wb"))== NULL)
     {
-        cerr << "ERROR_OPEN_OK_FILE:" << "Not open" << "\n"; 
+        std::cerr << "ERROR_OPEN_OK_FILE:" << "Not open" << "\n"; 
         return 1;
     }
     
     if(ControlFile!="") {
               MyC->MarcIn->LoadCheck(ControlFile.c_str());
               if (MyC->sError!="") {
-                  cerr << "ERROR_LOAD_CHECK: " + MyC->sError + "\n";
+                  std::cerr << "ERROR_LOAD_CHECK: " + MyC->sError + "\n";
                   return 1;
               } 
      }
@@ -224,21 +224,21 @@ int main(int argc, char* argv[])
     //Load inicialize                                                                                                            
     if (MyC->LoadAll(CodeFile))
     {
-       cerr << "ERROR_LOAD_ALL: " + MyC->sError + "\n";
+       std::cerr << "ERROR_LOAD_ALL: " + MyC->sError + "\n";
        return 1;
     }      
-    cout << "OK: " << "Rules file is recognized" << "\n"; 
+    std::cout << "OK: " << "Rules file is recognized" << "\n"; 
     log << "OK: " << "Rules file is recognized" << "\n"; 
-    cout << "\n"; 
+    std::cout << "\n"; 
     
     long i;
     numberErrors=0;
     for(i=0;i<MyFR->GetCountRecords();i++)
     {
        char* TRec = MyFR->GetRecord(i);
-       string myR = TRec;
+       std::string myR = TRec;
        
-       if (i%100==0) cout << "Converting record " << i+1 << "/" << MyFR->GetCountRecords() << "\n";
+       if (i%100==0) std::cout << "Converting record " << i+1 << "/" << MyFR->GetCountRecords() << "\n";
        log << "-----------------------------------------------------------------\n";
        log <<"Converting record " << i+1 << "/" << MyFR->GetCountRecords() << "\n";
        
@@ -249,7 +249,7 @@ int main(int argc, char* argv[])
           fwrite(MyC->sError.c_str(),1,MyC->sError.length(),fwerr); 
           fwrite("\n",1,1,fwerr);           
           fwrite("[[ERROR]] ",1,9,fwerr); 
-          cerr << "ERROR_INSERT_RECORD: " + MyC->sError + "\n";     
+          std::cerr << "ERROR_INSERT_RECORD: " + MyC->sError + "\n";     
           log << "Error inserting record: " << MyC->sError << "\n";
           log << "-----------------------------------------------------------------\n";
           MyC->ClearErrors();
@@ -274,11 +274,11 @@ int main(int argc, char* argv[])
        
        log << "'\n";
        log << "-----------------------------------------------------------------\n";
-       string CheckErr;
+       std::string CheckErr;
        if(ControlFile!="") {
           log << "General verification" << "\n";
           log << "====================" << "\n";
-          string sErr = MyC->MarcIn->CheckRecord(Lang);
+          std::string sErr = MyC->MarcIn->CheckRecord(Lang);
           log << sErr << "\n";
           if (sErr!="") 
              CheckErr="CHECK ERROR";
@@ -297,13 +297,13 @@ int main(int argc, char* argv[])
           fwrite("\n",1,1,fwerr);           
           fwrite("[[ERROR]] ",1,9,fwerr); 
           fwrite("\n",1,1,fwerr);
-          //cerr << "ERROR_CONVERT: " + MyC->sError + "\n";
+          //std::cerr << "ERROR_CONVERT: " + MyC->sError + "\n";
           log << "Error converting record: " << MyC->sError << "\n";
           numberErrors++;
           delete[] TRec;
           continue;
        }        
-       string* OutS =MyC->GetOut(DFormat);          
+       std::string* OutS =MyC->GetOut(DFormat);          
        if (MyC->sError!="") 
        {
           fwrite((const void *) TRec,1,strlen(TRec),fwerr); 
@@ -311,7 +311,7 @@ int main(int argc, char* argv[])
           fwrite("[[ERROR]] ",1,9,fwerr); 
           fwrite(MyC->sError.c_str(),1,MyC->sError.length(),fwerr); 
           fwrite("\n",1,1,fwerr);           
-          cerr << "ERROR_CONVERT: " + MyC->sError + "\n";
+          std::cerr << "ERROR_CONVERT: " + MyC->sError + "\n";
           log << "Error outing record: " << MyC->sError << "\n";
           numberErrors++;
           delete[] TRec;
@@ -332,17 +332,17 @@ int main(int argc, char* argv[])
     MyC->DoneAll();
     /*if (MyC->sError!="") 
     {
-        cerr << "ERROR_DONE_ALL: " + MyC->sError + "\n";
+        std::cerr << "ERROR_DONE_ALL: " + MyC->sError + "\n";
     }*/
     
     fclose(fw);
     fclose(fwerr);
     fclose(fwOK);
-    cout << "\n";
-    cout << "CONVERT " << MyFR->GetCountRecords() << " Records" << "\n";
-    cout << numberErrors;
-    cout << " RECORDS WITH ERRORS";
-    cout << "\n";
+    std::cout << "\n";
+    std::cout << "CONVERT " << MyFR->GetCountRecords() << " Records" << "\n";
+    std::cout << numberErrors;
+    std::cout << " RECORDS WITH ERRORS";
+    std::cout << "\n";
     log << "*****************************************************************\r\n";
     log << "STATISTIC" << "\r\n";
     log << "CONVERT " << MyFR->GetCountRecords() << " RECORDS\r\n";

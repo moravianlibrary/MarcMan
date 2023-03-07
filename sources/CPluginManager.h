@@ -19,25 +19,25 @@ class CPluginManager {
    public:
       CPluginManager();
       ~CPluginManager();
-      string getErrorMessage();
-      void setLog(ostream *log, int level);
-      int registerPlugins(map<string, M_EXPRESSION_ELEMENT *> *configuration);
+      std::string getErrorMessage();
+      void setLog(std::ostream *log, int level);
+      int registerPlugins(std::map<std::string, M_EXPRESSION_ELEMENT *> *configuration);
       int unregisterPlugins();
-      int loadPlugins(map<string, M_EXPRESSION_ELEMENT *> *configuration);
+      int loadPlugins(std::map<std::string, M_EXPRESSION_ELEMENT *> *configuration);
       int unloadPlugins();
-      int callPluginFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const string *name,vector<M_EXPRESSION_ELEMENT *> *args, M_EXPRESSION_ELEMENT *retVal);
+      int callPluginFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const std::string *name,std::vector<M_EXPRESSION_ELEMENT *> *args, M_EXPRESSION_ELEMENT *retVal);
       int isEnabled();
    private:
-      ostream *log;
+      std::ostream *log;
       int logLevel;
       int pluginManagerEnabled;
-      map <string, DLIB_HANDLE> pluginHandles;
-      map <string, CMarcManPlugin *> plugins;
-      string errorMessage;
+      std::map <std::string, DLIB_HANDLE> pluginHandles;
+      std::map <std::string, CMarcManPlugin *> plugins;
+      std::string errorMessage;
       
-      void setErrorMessage(string message);
-      int registerPlugin(const string pluginPath);
-      int unregisterPlugin(const string pluginame);
+      void setErrorMessage(std::string message);
+      int registerPlugin(const std::string pluginPath);
+      int unregisterPlugin(const std::string pluginame);
 };
 
 #endif

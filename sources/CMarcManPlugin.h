@@ -6,7 +6,6 @@
 #include "CMarcAnalyzer.h"
 #include "CUseScript.h"
 
-using namespace std;
 
 #ifdef WIN32
 
@@ -19,12 +18,14 @@ using namespace std;
 
 #endif
 
+//using namespace std;
+
 class CMarcManPlugin {
     public:
-        virtual string getName() = 0;
-        virtual vector<string> getFunctionList() = 0;
-        virtual int callFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const string *functionName, vector<M_EXPRESSION_ELEMENT *> *functionArguments, M_EXPRESSION_ELEMENT *returnValue) = 0;
-        virtual int load(map<string, M_EXPRESSION_ELEMENT *> *configuration) { return 0; };
+        virtual std::string getName() = 0;
+        virtual std::vector<std::string> getFunctionList() = 0;
+        virtual int callFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const std::string *functionName, std::vector<M_EXPRESSION_ELEMENT *> *functionArguments, M_EXPRESSION_ELEMENT *returnValue) = 0;
+        virtual int load(std::map<std::string, M_EXPRESSION_ELEMENT *> *configuration) { return 0; };
         virtual int unload() { return 0; };
 };
 

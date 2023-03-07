@@ -9,7 +9,7 @@
 #include <fstream>
 #include <stdio.h>
 
-using namespace std;
+//using namespace std;
 
 
 
@@ -124,29 +124,29 @@ extern char* E_DIVISION;
 extern char* E_ASSIGNING;
 
 //KEYWORDS
-extern const string KEYWORD_IF;
-extern const string KEYWORD_THEN;
-extern const string KEYWORD_ELSE;
-extern const string KEYWORD_ENDIF;
-extern const string KEYWORD_FOR;
-extern const string KEYWORD_TO;
-extern const string KEYWORD_NEXT;
-extern const string KEYWORD_WHILE;
-extern const string KEYWORD_WEND;
-extern const string KEYWORD_EXIT;
+extern const std::string KEYWORD_IF;
+extern const std::string KEYWORD_THEN;
+extern const std::string KEYWORD_ELSE;
+extern const std::string KEYWORD_ENDIF;
+extern const std::string KEYWORD_FOR;
+extern const std::string KEYWORD_TO;
+extern const std::string KEYWORD_NEXT;
+extern const std::string KEYWORD_WHILE;
+extern const std::string KEYWORD_WEND;
+extern const std::string KEYWORD_EXIT;
 
-int EscapeToInt(string Text);
+int EscapeToInt(std::string Text);
 
 class M_EXPRESSION_ELEMENT
 {
 public:
     int iDepth;
     int iType;
-    string* sName;
+    std::string* sName;
     int iIntValue;
     ~M_EXPRESSION_ELEMENT()
     {
-       //cout << "deleteexpression\n";
+       //std::cout << "deleteexpression\n";
        delete sName;
     }
 };
@@ -155,12 +155,12 @@ class M_PROG_NODE
 {
 public:
 	int shType;
-    string* sCommand;
-    string* sQuestion;
+    std::string* sCommand;
+    std::string* sQuestion;
     int iTrueJump;
     int iFalseJump;
-    vector<M_EXPRESSION_ELEMENT *> CommandExpression;
-    vector<M_EXPRESSION_ELEMENT *> QuestionExpression;
+    std::vector<M_EXPRESSION_ELEMENT *> CommandExpression;
+    std::vector<M_EXPRESSION_ELEMENT *> QuestionExpression;
     int MaxDepthCommand;
     int MaxDepthQuestion;
     ~M_PROG_NODE()
@@ -174,8 +174,8 @@ public:
         {
             delete QuestionExpression[i];
         }
-       // cout << "deleting" + *sCommand + "\n";
-       // cout << "deleting" + *sQuestion + "\n";
+       // std::cout << "deleting" + *sCommand + "\n";
+       // std::cout << "deleting" + *sQuestion + "\n";
         delete sCommand;
         delete sQuestion;
     }
@@ -184,9 +184,9 @@ public:
 class M_CODE
 {
 public:
-    string* sCode;
-    string* sMarkCode;
-    vector<M_PROG_NODE *> ProgNodeArray;
+    std::string* sCode;
+    std::string* sMarkCode;
+    std::vector<M_PROG_NODE *> ProgNodeArray;
     ~M_CODE()
     {
         for(int i=0;i<ProgNodeArray.size();i++)
@@ -202,13 +202,13 @@ public:
 class CUseScript
 {
 public:
-    map<string,M_EXPRESSION_ELEMENT*>* gVariables;
-    vector<string *> aMethods;
+    std::map<std::string,M_EXPRESSION_ELEMENT*>* gVariables;
+    std::vector<std::string *> aMethods;
     int intError;
     int intLineError;
 
-    int SetLog(ofstream* lg, int LogAllMes);
-	ofstream* log;
+    int SetLog(std::ofstream* lg, int LogAllMes);
+	std::ofstream* log;
 	int LogAll;
 
     M_CODE * Code;
@@ -229,95 +229,95 @@ public:
 
 public:
     int Execute();
-    int SetCode(string* sCode, int NoPrepare);
-    string * SerializeProgNodes();
-    int SetSerializeProgNodes(string* SerString);    
-    string GetStringError();
-    int EcsapeString(string *strText,char Escape);
-    M_EXPRESSION_ELEMENT * (*ptrFunction)(void* ptrClientClass, string* MethodName, vector<M_EXPRESSION_ELEMENT *>* outarrElements);
+    int SetCode(std::string* sCode, int NoPrepare);
+    std::string * SerializeProgNodes();
+    int SetSerializeProgNodes(std::string* SerString);    
+    std::string GetStringError();
+    int EcsapeString(std::string *strText,char Escape);
+    M_EXPRESSION_ELEMENT * (*ptrFunction)(void* ptrClientClass, std::string* MethodName, std::vector<M_EXPRESSION_ELEMENT *>* outarrElements);
     void* ptrClientClass;
 
 private:
 
-    int SplitString(string* strSplit, vector<string*>* outArray, char* Separator);
+    int SplitString(std::string* strSplit, std::vector<std::string*>* outArray, char* Separator);
     
-    string OrdinalForm(int number, int size);
+    std::string OrdinalForm(int number, int size);
 
-    M_EXPRESSION_ELEMENT* AddNextExpresionElement(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, string* Name);
+    M_EXPRESSION_ELEMENT* AddNextExpresionElement(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, std::string* Name);
 
-    M_EXPRESSION_ELEMENT* AddNextExpresionIntElement(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, int intValue);
+    M_EXPRESSION_ELEMENT* AddNextExpresionIntElement(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int Depth, int Type, int intValue);
 
-    int AnalyzeExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int* MaxDepth, string* sExpression);
+    int AnalyzeExpression(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int* MaxDepth, std::string* sExpression);
 
-    int CalculateOperation(M_EXPRESSION_ELEMENT* One, string Operator, M_EXPRESSION_ELEMENT* Two);
+    int CalculateOperation(M_EXPRESSION_ELEMENT* One, std::string Operator, M_EXPRESSION_ELEMENT* Two);
 
-    M_EXPRESSION_ELEMENT* CallMethod(string* MethodName, vector<M_EXPRESSION_ELEMENT *>* arguments);
+    M_EXPRESSION_ELEMENT* CallMethod(std::string* MethodName, std::vector<M_EXPRESSION_ELEMENT *>* arguments);
 
-    int CompileMethod(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int BeginSection, int EndSection,int *Removed);
+    int CompileMethod(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int BeginSection, int EndSection,int *Removed);
 
-    int CopyConstArrayExpression(vector<M_EXPRESSION_ELEMENT *>* SourceArray, vector<M_EXPRESSION_ELEMENT *>* NewArray);
+    int CopyConstArrayExpression(std::vector<M_EXPRESSION_ELEMENT *>* SourceArray, std::vector<M_EXPRESSION_ELEMENT *>* NewArray);
 
-    void CutCommandByType(string* strCommand, string* strMarkCommand, vector<string *> *ptrElements, vector<string *> *ptrMarkElements);
+    void CutCommandByType(std::string* strCommand, std::string* strMarkCommand, std::vector<std::string *> *ptrElements, std::vector<std::string *> *ptrMarkElements);
 
-    void DebugExpression(vector<M_EXPRESSION_ELEMENT *>* outarrElements, char* sFileName);
+    void DebugExpression(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, char* sFileName);
 
-    void DebugProgNodes(vector<M_PROG_NODE *>* aProgNodes, char* sFileName);
+    void DebugProgNodes(std::vector<M_PROG_NODE *>* aProgNodes, char* sFileName);
 
-    int DeleteSection(string* strAnalyzeText, string* strMarks, char chMarkSection);
+    int DeleteSection(std::string* strAnalyzeText, std::string* strMarks, char chMarkSection);
 
-    int Execute(vector<M_PROG_NODE *>* aProgNodes);
+    int Execute(std::vector<M_PROG_NODE *>* aProgNodes);
 
-    int FillMarkSection(string* strMark, char chMarkBegin,  char chMarkEnd);
+    int FillMarkSection(std::string* strMark, char chMarkBegin,  char chMarkEnd);
 
-    int GetExpElementIntValue(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iIndex);
+    int GetExpElementIntValue(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iIndex);
 
-    string* GetExpElementName(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iIndex);
+    std::string* GetExpElementName(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iIndex);
 
-    int GetExpElementType(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iIndex);
+    int GetExpElementType(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iIndex);
 
-    int GetNextSection(vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iDepth, int* BeginSection, int* EndSection);
+    int GetNextSection(std::vector<M_EXPRESSION_ELEMENT *>* outarrElements, int iDepth, int* BeginSection, int* EndSection);
 
-    M_PROG_NODE* GetPtrNode(vector<M_PROG_NODE *>* aProgNodes, int iIndex);
+    M_PROG_NODE* GetPtrNode(std::vector<M_PROG_NODE *>* aProgNodes, int iIndex);
 
     int GetVariableValue(M_EXPRESSION_ELEMENT* Variable);
 
-    int IntExpElementDepth(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex);
+    int IntExpElementDepth(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iIndex);
 
-    string* JoinSections(vector<string *> *ptrElements, int IndexBegin, int IndexEnd);
+    std::string* JoinSections(std::vector<std::string *> *ptrElements, int IndexBegin, int IndexEnd);
 
-    int LinkNodes(vector<M_PROG_NODE *> *aProgNodes);
+    int LinkNodes(std::vector<M_PROG_NODE *> *aProgNodes);
 
-    int MakeNodes(vector<M_PROG_NODE *> *aProgNodes, vector<string *>* aLines, vector<string *> *aMarkLines);
+    int MakeNodes(std::vector<M_PROG_NODE *> *aProgNodes, std::vector<std::string *>* aLines, std::vector<std::string *> *aMarkLines);
 
-    int MarkKeyword(string* strAnalyzeText, string* strMarks, string sSearchString, char chMarkBegin,  char chMarkEnd, char* chNeib);
+    int MarkKeyword(std::string* strAnalyzeText, std::string* strMarks, std::string sSearchString, char chMarkBegin,  char chMarkEnd, char* chNeib);
 
-    int MarkSections(string* strAnalyzeText, string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd);
+    int MarkSections(std::string* strAnalyzeText, std::string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd);
 
-    int MarkSigns(string* strAnalyzeText, string* strMark, char *sign, char chMarkSign);
+    int MarkSigns(std::string* strAnalyzeText, std::string* strMark, char *sign, char chMarkSign);
 
-    int NextCommand(vector<string *> *ptrMarkElements, int Index, char FindMark);
+    int NextCommand(std::vector<std::string *> *ptrMarkElements, int Index, char FindMark);
 
-    int NodesFromLines(vector<M_PROG_NODE *> *aProgNodes, string* strCommand, string* strMarkCommand);
+    int NodesFromLines(std::vector<M_PROG_NODE *> *aProgNodes, std::string* strCommand, std::string* strMarkCommand);
 
-    int PrepareNodes(vector<M_PROG_NODE *> *aProgNodes);
+    int PrepareNodes(std::vector<M_PROG_NODE *> *aProgNodes);
 
-    int ProcessExpression(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iDepth);
+    int ProcessExpression(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int iDepth);
 
-    int SectionCalculate(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex);
+    int SectionCalculate(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex);
 
-    int SectionCalculateByOperator(vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex, char *Operator1, char *Operator2, int *Removed);
+    int SectionCalculateByOperator(std::vector<M_EXPRESSION_ELEMENT *> *outarrElements, int BeginIndex, int EndIndex, char *Operator1, char *Operator2, int *Removed);
 
-    void SeparateLines(vector<string *> *arroutLines, vector<string *> *arroutMarkLines,  string* strAnalyzeText, string* strMark, char * chLineSeparators, char chEmpty);
+    void SeparateLines(std::vector<std::string *> *arroutLines, std::vector<std::string *> *arroutMarkLines,  std::string* strAnalyzeText, std::string* strMark, char * chLineSeparators, char chEmpty);
 
-    int SetVariableValue(string* ValueName, M_EXPRESSION_ELEMENT* pValue);
+    int SetVariableValue(std::string* ValueName, M_EXPRESSION_ELEMENT* pValue);
 
-    int MarkCode(string *strAnalyzeText, string *strMark);
+    int MarkCode(std::string *strAnalyzeText, std::string *strMark);
 
-    int EscapeSequention(string* strAnalyzeText, string* strMark, char MarkString, char Escape);
+    int EscapeSequention(std::string* strAnalyzeText, std::string* strMark, char MarkString, char Escape);
 
-    void TrimRight(string* sStr, char* ArraySep);
+    void TrimRight(std::string* sStr, char* ArraySep);
 
-    void TrimLeft(string* sStr, char* ArraySep);
+    void TrimLeft(std::string* sStr, char* ArraySep);
 };
 
 #endif

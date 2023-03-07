@@ -8,7 +8,7 @@
 #include <fstream>
 #include <stdio.h>
 
-using namespace std;
+//using namespace std;
 
 class CFlag
 {
@@ -35,7 +35,7 @@ public:
       
    int IsError(void)
       { return errState; }
-   string StrError(void)
+   std::string StrError(void)
       { return errString; }
    
 protected:
@@ -48,7 +48,7 @@ protected:
    void MarkRecordEnd(void)
       { recEnd = filePos; }
 
-   string errString;
+   std::string errString;
    int errState;
 
 private:
@@ -96,14 +96,14 @@ public:
     char* GetRecord(long Index);
 	int CloseFile();
 
-    string g_Error;
+    std::string g_Error;
     ~CMarcFileReader()
     {
        
     }
 private:
 	FILE *fr; 
-	vector<CFlag*> CollFlags;
+	std::vector<CFlag*> CollFlags;
 };
 
 #endif

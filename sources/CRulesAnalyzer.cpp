@@ -8,22 +8,22 @@
 
 char* CUTTRIMED=                   "\n\t\r ";
 
-ostream& operator<<(ostream &os, CRule &objekt)
+std::ostream& operator<<(std::ostream &os, CRule &objekt)
 {
     os << "FROM: " + objekt.From + " TO: " + objekt.To;
     return os;
 }
 
-int CRulesAnalyzer::SetLog(ofstream* lg, int LogAllMes)
+int CRulesAnalyzer::SetLog(std::ofstream* lg, int LogAllMes)
 {
 	log=lg;
 	LogAll=LogAllMes;
 	return 0;
 }
 
-string CRulesAnalyzer::OrdinalForm(int number, int size)
+std::string CRulesAnalyzer::OrdinalForm(int number, int size)
 {
-    string myNumber;
+    std::string myNumber;
     char buffer[20];
     
     sprintf(buffer,"%d",number);
@@ -34,7 +34,7 @@ string CRulesAnalyzer::OrdinalForm(int number, int size)
     return myNumber;
 }
 
-void  CRulesAnalyzer::TrimLeft(string* sStr, char* ArraySep)
+void  CRulesAnalyzer::TrimLeft(std::string* sStr, char* ArraySep)
 {
    int finds=1;
    int i;
@@ -55,7 +55,7 @@ void  CRulesAnalyzer::TrimLeft(string* sStr, char* ArraySep)
     }
 }
 
-void  CRulesAnalyzer::TrimRight(string* sStr, char* ArraySep)
+void  CRulesAnalyzer::TrimRight(std::string* sStr, char* ArraySep)
 {
    int finds=1;
    int i;
@@ -77,21 +77,21 @@ void  CRulesAnalyzer::TrimRight(string* sStr, char* ArraySep)
 }
 
 
-int CRulesAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, char* Separator)
+int CRulesAnalyzer::SplitString(std::string* strSplit, std::vector<std::string*>* outArray, char* Separator)
 {
 	int iPos = 0;
 	int newPos = -1;
-    string sSeparator=Separator;
+    std::string sSeparator=Separator;
 	int sizeS2 = sSeparator.size();
 	int isize = strSplit->size();
 
-	vector<int> positions;
+	std::vector<int> positions;
 
 	newPos = strSplit->find(Separator, 0);
 
     if(newPos==(-1)) 
     {
-        outArray->push_back(new string(strSplit->substr(0)));
+        outArray->push_back(new std::string(strSplit->substr(0)));
         return 0;
     }
 
@@ -104,7 +104,7 @@ int CRulesAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, cha
     
 	for(int i=0;i<=positions.size();i++)
 	{
-		string s;
+		std::string s;
 		if(i==0) 
         { 
             s = strSplit->substr(0, positions[i]);
@@ -124,7 +124,7 @@ int CRulesAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, cha
 			    }
 		    }
         }
-		outArray->push_back(new string(s));
+		outArray->push_back(new std::string(s));
 	}
 	return 0;
 }
@@ -134,11 +134,11 @@ int CRulesAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, cha
  * FUNCTION:     MarkSections
  *
  * DESCRIPTION:  funkce vezme analyzovany text a vyhleda v nìm èásti zaèínající chBegin a konèící chEnd a oznaèí
- *               je ve stejnì dlouhém stringu strMark identifikatory chMarkBegin a chMarkEnd. Je-li promenna iInsertField
+ *               je ve stejnì dlouhém std::stringu strMark identifikatory chMarkBegin a chMarkEnd. Je-li promenna iInsertField
  *               1 oznaèí se vcetne konecneho chEnd
  *
- * PARAMETERS:   (IN)   string* strAnalyzeText - analyzovany text
- *               (OUT)	string* strMarks - oznaèkovaný text
+ * PARAMETERS:   (IN)   std::string* strAnalyzeText - analyzovany text
+ *               (OUT)	std::string* strMarks - oznaèkovaný text
  *               (IN)	char chBegin - hledaný zaèátek
  *               (IN)	char chEnd - hledaný konec
  *               (IN)	char chMarkBegin - znacka zacatku
@@ -151,7 +151,7 @@ int CRulesAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, cha
  *
  ***********************************************************************/
 
-int CRulesAnalyzer::MarkSections(string* strAnalyzeText, string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
+int CRulesAnalyzer::MarkSections(std::string* strAnalyzeText, std::string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
 {
     int iCounter=0;
     int iPossitionStart;
@@ -184,14 +184,14 @@ int CRulesAnalyzer::MarkSections(string* strAnalyzeText, string* strMarks, char 
 }
 
 
-int CRulesAnalyzer::MarkSections2(string* strAnalyzeText, string* strMarks, char* chBegin, char* chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
+int CRulesAnalyzer::MarkSections2(std::string* strAnalyzeText, std::string* strMarks, char* chBegin, char* chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
 {
     int iCounter=0;
     int h;
     int iPossitionStart;
     int iPossitionStop;
-    string chB=chBegin;
-    string chE=chEnd;
+    std::string chB=chBegin;
+    std::string chE=chEnd;
     while (iCounter<strAnalyzeText->length())
     {
         iPossitionStart=strAnalyzeText->find(chB,iCounter);
@@ -231,7 +231,7 @@ int CRulesAnalyzer::MarkSections2(string* strAnalyzeText, string* strMarks, char
  *               sekce zaèínající chMarkBegin a konèící chMarkEnd charem chMarkBegin.Pøi C,N by
  *               vysledek byl XXXXXXXCCCCCCCCCCXXXXNXX
  *
- * PARAMETERS:   (OUT)	string* strMarks - oznaèkovaný text
+ * PARAMETERS:   (OUT)	std::string* strMarks - oznaèkovaný text
  *               (IN)	char chMarkBegin - hledaný zaèátek
  *               (IN)	char chMarkEnd - hledaný konec
  *
@@ -241,7 +241,7 @@ int CRulesAnalyzer::MarkSections2(string* strAnalyzeText, string* strMarks, char
  *
  ***********************************************************************/
 
-int CRulesAnalyzer::FillMarkSection(string* strMark, char chMarkBegin,  char chMarkEnd)
+int CRulesAnalyzer::FillMarkSection(std::string* strMark, char chMarkBegin,  char chMarkEnd)
 {
     int iPossitionStart;
     int iPossitionStop;    
@@ -275,13 +275,13 @@ int CRulesAnalyzer::FillMarkSection(string* strMark, char chMarkBegin,  char chM
  * FUNCTION:     CutCommandByType
  *
  * DESCRIPTION:  funkce vezme analyzovaný a omarkovaný text a vytvoøí pole analyzovaných
- *               stringù a markovacích stringù délky jedna. Funkce analyzovaný text dìlí podle 
- *               identifikovaných sekcí vzniklých vyplnìním markovacího stringu
+ *               std::stringù a markovacích std::stringù délky jedna. Funkce analyzovaný text dìlí podle 
+ *               identifikovaných sekcí vzniklých vyplnìním markovacího std::stringu
  *
- * PARAMETERS:   (IN)    string* strCommand - analyzovaný text
- *               (IN)	 string* strMarkCommand -omarkovaný text
- *               (OUT)	 stringArray *ptrElements - jednotlivé èásti analyzovaného textu podle sekcí
- *               (IN)	 stringArray *ptrMarkElements - markovací stringy délky jedna oznaèující typ sekce
+ * PARAMETERS:   (IN)    std::string* strCommand - analyzovaný text
+ *               (IN)	 std::string* strMarkCommand -omarkovaný text
+ *               (OUT)	 std::stringArray *ptrElements - jednotlivé èásti analyzovaného textu podle sekcí
+ *               (IN)	 std::stringArray *ptrMarkElements - markovací std::stringy délky jedna oznaèující typ sekce
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
  * 
@@ -289,12 +289,12 @@ int CRulesAnalyzer::FillMarkSection(string* strMark, char chMarkBegin,  char chM
  *
  ***********************************************************************/
 
-void CRulesAnalyzer::CutCommandByType(string* strCommand, string* strMarkCommand, vector<string *> *ptrElements, vector<string *> *ptrMarkElements)
+void CRulesAnalyzer::CutCommandByType(std::string* strCommand, std::string* strMarkCommand, std::vector<std::string *> *ptrElements, std::vector<std::string *> *ptrMarkElements)
 {
     char chLastChar='J';
     char chNowChar;
     int iElementCounter=-1;
-    string newChar;
+    std::string newChar;
 
     for (int i=0;i<strMarkCommand->length();i++)
     {
@@ -303,14 +303,14 @@ void CRulesAnalyzer::CutCommandByType(string* strCommand, string* strMarkCommand
         {
             iElementCounter++;
             newChar=(*strCommand)[i];
-            ptrElements->push_back(new string(newChar));
+            ptrElements->push_back(new std::string(newChar));
             newChar=(*strMarkCommand)[i];
-            ptrMarkElements->push_back(new string(newChar));
+            ptrMarkElements->push_back(new std::string(newChar));
             chLastChar=chNowChar;
         }
         else
         {
-            string* ptrStr;
+            std::string* ptrStr;
             ptrStr =(*ptrElements)[iElementCounter];
             *ptrStr+=(*strCommand)[i];
             (*ptrElements)[iElementCounter]= ptrStr;
@@ -318,22 +318,22 @@ void CRulesAnalyzer::CutCommandByType(string* strCommand, string* strMarkCommand
     }
 } 
 
-int CRulesAnalyzer::RecognizeCommand(string* Comm, string *LAB, string *IDF, string *ILF, string *IDS, long* IF, long* IS, int* Indic, int* Sta, int* Sto)
+int CRulesAnalyzer::RecognizeCommand(std::string* Comm, std::string *LAB, std::string *IDF, std::string *ILF, std::string *IDS, long* IF, long* IS, int* Indic, int* Sta, int* Sto)
 {
-    string OutStr;
+    std::string OutStr;
 
-    string IDField;      //Field
-    string IDSub;          //Subfile
+    std::string IDField;      //Field
+    std::string IDSub;          //Subfile
     long IndexField=0;      //pozice fieldu
     long IndexSubField=0;   //pozicesubfieldu
-    string LinkField;      //Cislo linkovaciho fieldu
+    std::string LinkField;      //Cislo linkovaciho fieldu
     int Indikator=0;
     int Start=-1;
     int Stop=-1;
 
     int Pointer; 
-    string mV;
-    string CommNext;
+    std::string mV;
+    std::string CommNext;
 
     //Pole
     Pointer=0;
@@ -423,7 +423,7 @@ int CRulesAnalyzer::RecognizeCommand(string* Comm, string *LAB, string *IDF, str
                 if (CommNext=="I") //Indikator
                 {
                     if (Comm->length()<Pointer+1) return 1;
-                    string CommNext2=Comm->substr(Pointer+1,1);
+                    std::string CommNext2=Comm->substr(Pointer+1,1);
                     if (CommNext2=="1")
                     {
                         Indikator=1;
@@ -516,9 +516,9 @@ if (LogAll) { //Debug
 
     int i;
     FILE *fr;
-    vector<string *> Elements;
-    vector<string *> MarkElements;
-    string strAnalyzeText;
+    std::vector<std::string *> Elements;
+    std::vector<std::string *> MarkElements;
+    std::string strAnalyzeText;
     if ((fr=fopen(sPath,"r"))== NULL)
     {
        //(*log)<< "Soubor se nepodarilo otevrit\n";
@@ -533,7 +533,7 @@ if (LogAll) { //Debug
 	    strAnalyzeText+=buffer;	
 		};            
     
-    string* strMark=new string(strAnalyzeText.length(), 'x');
+    std::string* strMark=new std::string(strAnalyzeText.length(), 'x');
  
 	MarkSections2(&strAnalyzeText,strMark,"/*","*/",'C','R',0);
     MarkSections2(&strAnalyzeText,strMark,"{","}",'B','E',0);
@@ -701,18 +701,18 @@ if (LogAll) { //Debug
     int i;
     int w;
    //pro prenos
-    string LAB;
-    string IDF;
-    string ILF;
-    string IDS;
+    std::string LAB;
+    std::string IDF;
+    std::string ILF;
+    std::string IDS;
     int INDIC;
     int Start;
     int Stop;
     long IF;
     long IS;
 
-    vector<string *> Splited;
-    vector<string *> SplitedTo;
+    std::vector<std::string *> Splited;
+    std::vector<std::string *> SplitedTo;
     long Num=CollRules.size();
     for(i=0;i<Num;i++)
     {
@@ -776,9 +776,9 @@ if (LogAll) { //Debug
 	return 0;
 }
 
-int CRulesAnalyzer::IsForC(string* Comm)
+int CRulesAnalyzer::IsForC(std::string* Comm)
 {
-    string IDField;
+    std::string IDField;
     for(long i=0;i<CollRules.size();i++)
     {
        for(long j=0;j<CollRules[i]->CollRulesItem.size();j++)
@@ -790,7 +790,7 @@ int CRulesAnalyzer::IsForC(string* Comm)
     return 0;
 }
 
-int CRulesAnalyzer::LoadCommand(string* Comm, CCollRulesByC* newCOM)
+int CRulesAnalyzer::LoadCommand(std::string* Comm, CCollRulesByC* newCOM)
 {
 
 if (LogAll) { //Debug
@@ -802,21 +802,21 @@ if (LogAll) { //Debug
 } //End Debug
 
     //pro prenos
-    string LAB;
-    string IDF;
-    string ILF;
-    string IDS;
+    std::string LAB;
+    std::string IDF;
+    std::string ILF;
+    std::string IDS;
     int INDIC;
     int Start;
     int Stop;
     long IF;
     long IS;
     
-    string sLab;
-    string IDField;
-    string IDSubField;
-    string IDLinkField;
-    string sFrom;
+    std::string sLab;
+    std::string IDField;
+    std::string IDSubField;
+    std::string IDLinkField;
+    std::string sFrom;
     long locINDIC;
 
     LAB="";IDF="";ILF="";IDS="";INDIC=0;Start=0;Stop=0;
@@ -935,7 +935,7 @@ if (LogAll) { //Debug
 	return 0;
 }
 
-CCollRulesByC* CRulesAnalyzer::GetRulesByC(string* Command)
+CCollRulesByC* CRulesAnalyzer::GetRulesByC(std::string* Command)
 {
 
 if (LogAll) { //Debug
@@ -951,7 +951,7 @@ if (LogAll) { //Debug
     {
         //neni tam musime zalozit komponentu, ulozit ji do mapy a loadnout vzorec
          CCollRulesByC* NewColl=new CCollRulesByC();
-         mapRulByC.insert(make_pair(string(*Command),NewColl));
+         mapRulByC.insert(std::make_pair(std::string(*Command),NewColl));
          LoadCommand(Command, NewColl);
          return NewColl;
     }

@@ -122,8 +122,8 @@ CUnicodeCharacterData *CUnicodeDatabase::unicodeCharacterDataFind(UINT32 code) {
     return 0;
 }
 
-int split(vector<string>& v, const string& s, const char delimiter) {
-    string t = "";
+int split(std::vector<std::string>& v, const std::string& s, const char delimiter) {
+    std::string t = "";
     unsigned int i;
 
     v.clear();
@@ -142,9 +142,9 @@ int split(vector<string>& v, const string& s, const char delimiter) {
     return 0;
 }
 
-vector<UINT32> readCodes(vector<string>& v) {
+std::vector<UINT32> readCodes(std::vector<std::string>& v) {
 
-    vector<UINT32> codes;
+    std::vector<UINT32> codes;
 
     for (int i = 0; i < v.size(); i++) {
         char *ep = 0;
@@ -158,17 +158,17 @@ vector<UINT32> readCodes(vector<string>& v) {
     return codes;
 }
 
-int CUnicodeDatabase::parse(CUnicodeCharacterData& r, const string& s) {
-    vector<string> v;
-    vector<string> tv;
-    vector<UINT32> codes;
-    string t;
+int CUnicodeDatabase::parse(CUnicodeCharacterData& r, const std::string& s) {
+    std::vector<std::string> v;
+    std::vector<std::string> tv;
+    std::vector<UINT32> codes;
+    std::string t;
     char *ep;
 
     split(v, s, ';');
 
     for(int i = 0; i < v.size(); i++) {
-        string& value = v[i];     
+        std::string& value = v[i];     
         switch (i) {
             case 0: // Code
                 split(tv,value,' ');
@@ -255,7 +255,7 @@ int CUnicodeDatabase::parse(CUnicodeCharacterData& r, const string& s) {
     return 0;
 }
 
-int CUnicodeDatabase::uCharDecompose(vector<UINT32>& codes, UINT32 code) {
+int CUnicodeDatabase::uCharDecompose(std::vector<UINT32>& codes, UINT32 code) {
     CUnicodeCharacterData* r;
     r = unicodeCharacterDataFind(code);
     if (r && r->decompositionMapping.size() > 0) {
@@ -272,7 +272,7 @@ int CUnicodeDatabase::uCharDecompose(vector<UINT32>& codes, UINT32 code) {
     return 0;
 }
 
-int CUnicodeDatabase::unicodeDecompose(vector<UINT32>& output, const vector<UINT32>& input) {
+int CUnicodeDatabase::unicodeDecompose(std::vector<UINT32>& output, const std::vector<UINT32>& input) {
     for(int i=0; i < input.size(); i++) {
         if (uCharDecompose(output, input[i])) {
             return 1;
@@ -282,11 +282,11 @@ int CUnicodeDatabase::unicodeDecompose(vector<UINT32>& output, const vector<UINT
     return 0;
 }
 
-int CUnicodeDatabase::load(const string& fileName) {
+int CUnicodeDatabase::load(const std::string& fileName) {
 
     CUnicodeCharacterData row;
-    string s;
-    ifstream in (fileName.c_str());
+    std::string s;
+    std::ifstream in (fileName.c_str());
 
     if(!in) {
         return 1;
@@ -308,7 +308,7 @@ int CUnicodeDatabase::load(const string& fileName) {
 }
 
 
-int CUnicodeDatabase::utf8ToUnicode(vector<UINT32>& output, const string& input) {
+int CUnicodeDatabase::utf8ToUnicode(std::vector<UINT32>& output, const std::string& input) {
 
     UINT8 c;
     UINT32 uc;
@@ -338,7 +338,7 @@ int CUnicodeDatabase::utf8ToUnicode(vector<UINT32>& output, const string& input)
     return 0;
 }
 
-int CUnicodeDatabase::unicodeToUtf8(string &output,const  vector<UINT32>& input) {
+int CUnicodeDatabase::unicodeToUtf8(std::string &output,const  std::vector<UINT32>& input) {
 
     UINT32 uc;
     UINT8 mask;
@@ -373,10 +373,10 @@ int CUnicodeDatabase::unicodeToUtf8(string &output,const  vector<UINT32>& input)
 
 }
 
-int CUnicodeDatabase::utf8ToAscii(string& output, const string& input) {
+int CUnicodeDatabase::utf8ToAscii(std::string& output, const std::string& input) {
 
-    vector<UINT32> v1;
-    vector<UINT32> v2;
+    std::vector<UINT32> v1;
+    std::vector<UINT32> v2;
 
     utf8ToUnicode(v1,input);
     unicodeDecompose(v2, v1);

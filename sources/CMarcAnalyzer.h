@@ -10,7 +10,7 @@
 
 extern int codeVersion;
 
-using namespace std;
+//using namespace std;
 
 #define LOAD_ISO_FORMAT   1
 #define LOAD_TEXT_FORMAT  2
@@ -46,8 +46,8 @@ class CSubfield
 {
 public:
     int Index;
-    string* Value;
-    string* ID;
+    std::string* Value;
+    std::string* ID;
     CField* LinkingField;
 	CSubfield();
     ~CSubfield();
@@ -55,16 +55,16 @@ public:
 
 class CField {
 public:
-    string* ID;
-    string* ID1;
-    string* ID2;
+    std::string* ID;
+    std::string* ID1;
+    std::string* ID2;
     int Index;
-    vector<CSubfield*> ptrCollSubf;
+    std::vector<CSubfield*> ptrCollSubf;
 	CField()
 	{
-	    ID=new string();
-        ID1=new string(" ");
-        ID2=new string(" ");
+	    ID=new std::string();
+        ID1=new std::string(" ");
+        ID2=new std::string(" ");
     }
     ~CField()
     {
@@ -83,26 +83,26 @@ public:
 
 class CMarcAnalyzer {
 public:
-    vector<CField*> Fields;
-    vector<CField*> ControlFields;
-    vector<string*> aNoIdenField;
-    vector<string*> aLinkingField;
+    std::vector<CField*> Fields;
+    std::vector<CField*> ControlFields;
+    std::vector<std::string*> aNoIdenField;
+    std::vector<std::string*> aLinkingField;
 
-    string g_Error;    
-    string* g_Label;
-    string* g_FieldPrefix;
-    string* g_Format;
+    std::string g_Error;    
+    std::string* g_Label;
+    std::string* g_FieldPrefix;
+    std::string* g_Format;
     
-    int SetLog(ofstream* lg, int LogAllMes);
-	ofstream* log;
+    int SetLog(std::ofstream* lg, int LogAllMes);
+	std::ofstream* log;
 	int LogAll;
     
 	CMarcAnalyzer()
 	{
        LogAll=0; 
-	   g_Label=new string("                        ");
-       g_FieldPrefix=new string("");
-	   g_Format=new string("");
+	   g_Label=new std::string("                        ");
+       g_FieldPrefix=new std::string("");
+	   g_Format=new std::string("");
 	}
 	
     ~CMarcAnalyzer()
@@ -118,45 +118,45 @@ public:
     }
 
 public:
-	string CheckRecord(string Lang);
+	std::string CheckRecord(std::string Lang);
 	void LoadCheck(const char* sPath);
     int SortFields();
-    int OpenRecordFromString(string* strRecord, int OpenMode);
-	string* ValueByCSetPossWithPointers(string* Command, long loIF, long loIS, long PointerField, long PointerLinkingField, long PointerSubField);
-	string* ValueByCommandSetPoss(string* Command, long loIF, long loIS);
-	string* ValueByCommand(string* Command);
-	void SetValueByCommand(string* Command, string* Value, long IField, long ISubfield, long Add);
-	string* GetSerializeRecord(long Mode);
-	long MaxIndexByCommand(string* Command, long FIndex);
+    int OpenRecordFromString(std::string* strRecord, int OpenMode);
+	std::string* ValueByCSetPossWithPointers(std::string* Command, long loIF, long loIS, long PointerField, long PointerLinkingField, long PointerSubField);
+	std::string* ValueByCommandSetPoss(std::string* Command, long loIF, long loIS);
+	std::string* ValueByCommand(std::string* Command);
+	void SetValueByCommand(std::string* Command, std::string* Value, long IField, long ISubfield, long Add);
+	std::string* GetSerializeRecord(long Mode);
+	long MaxIndexByCommand(std::string* Command, long FIndex);
     int FillFieldsDepth();
 	void EmptyRecord();
     void CloneField(CField* Dest, CField* Sour);
 
 private:
-    string OrdinalForm(int number, int size);
-    int SplitString(string* strSplit, vector<string*> * outArray, char* Separator);
-    void Replace(string* strSplit, char* findStr, char* repStr);
-    int AddOneField(string* sField, CField* pField, char* SubSeparator, char* LinkingSeparator);
-    bool MayBeLinking(string Field); 
-    int SerializeRecord(string *outString, string *Sizes, char* SubfieldSeparator, char* FieldSeparator, int Mode);
+    std::string OrdinalForm(int number, int size);
+    int SplitString(std::string* strSplit, std::vector<std::string*> * outArray, char* Separator);
+    void Replace(std::string* strSplit, char* findStr, char* repStr);
+    int AddOneField(std::string* sField, CField* pField, char* SubSeparator, char* LinkingSeparator);
+    bool MayBeLinking(std::string Field); 
+    int SerializeRecord(std::string *outString, std::string *Sizes, char* SubfieldSeparator, char* FieldSeparator, int Mode);
     int random_range(int lo, int hi);
-    int FillSubfieldsDepth(vector<CSubfield*>* pcollS, int Link);
-    string* GetValueFromC(string IDField,string LinkField, string IDSub,long IndexField,long IndexSubField, int Indikator, int Start, int Stop, long* PointerField, long* PointerSubField, long* PointerLinkingField);
-    int RecognizeCommand(string* Comm, string *LAB, string *IDF, string *ILF, string *IDS, long* IF, long* IS, int* Indic, int* Sta, int* Sto);
-    int SetValueFromC(string* Value, string *IDField,string* LinkField, string* IDSub,long IndexField,long IndexSubField, int Indikator, int Start, int Stop, int Add);
-    long MaxLinkingSubfieldIndex(string* sIDF, string* sIDL, string* sSubID, long FIndex);
-    long MaxSubfieldIndex(string* sIDF, string* sSubID, long FIndex);
-    long MaxFieldIndex(string* sIDF);
-    long MaxLinkingFieldIndex(string* sIDF, long IndexField, string* sIDL);
-    void TrimRight(string* sStr, char* ArraySep);
-    void TrimLeft(string* sStr, char* ArraySep);
-    int MarkSections(string* strAnalyzeText, string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd);
-    int FillMarkSection(string* strMark, char chMarkBegin,  char chMarkEnd);
-    void CutCommandByType(string* strCommand, string* strMarkCommand, vector<string *> *ptrElements, vector<string *> *ptrMarkElements);    
-    int MarkSections2(string* strAnalyzeText, string* strMarks, char* chBegin, char* chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd);
-    string CheckSubfields( CField* ControlF,  CField* RedF, int WithLinking, string Lang);
-    string CheckOneSubfield( string sField, CSubfield* ControlSF,  CSubfield* RecSF, int WithLinking, string Lang);
-    int CheckChar( string sOneChar, string sCheckString);
+    int FillSubfieldsDepth(std::vector<CSubfield*>* pcollS, int Link);
+    std::string* GetValueFromC(std::string IDField,std::string LinkField, std::string IDSub,long IndexField,long IndexSubField, int Indikator, int Start, int Stop, long* PointerField, long* PointerSubField, long* PointerLinkingField);
+    int RecognizeCommand(std::string* Comm, std::string *LAB, std::string *IDF, std::string *ILF, std::string *IDS, long* IF, long* IS, int* Indic, int* Sta, int* Sto);
+    int SetValueFromC(std::string* Value, std::string *IDField,std::string* LinkField, std::string* IDSub,long IndexField,long IndexSubField, int Indikator, int Start, int Stop, int Add);
+    long MaxLinkingSubfieldIndex(std::string* sIDF, std::string* sIDL, std::string* sSubID, long FIndex);
+    long MaxSubfieldIndex(std::string* sIDF, std::string* sSubID, long FIndex);
+    long MaxFieldIndex(std::string* sIDF);
+    long MaxLinkingFieldIndex(std::string* sIDF, long IndexField, std::string* sIDL);
+    void TrimRight(std::string* sStr, char* ArraySep);
+    void TrimLeft(std::string* sStr, char* ArraySep);
+    int MarkSections(std::string* strAnalyzeText, std::string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd);
+    int FillMarkSection(std::string* strMark, char chMarkBegin,  char chMarkEnd);
+    void CutCommandByType(std::string* strCommand, std::string* strMarkCommand, std::vector<std::string *> *ptrElements, std::vector<std::string *> *ptrMarkElements);    
+    int MarkSections2(std::string* strAnalyzeText, std::string* strMarks, char* chBegin, char* chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd);
+    std::string CheckSubfields( CField* ControlF,  CField* RedF, int WithLinking, std::string Lang);
+    std::string CheckOneSubfield( std::string sField, CSubfield* ControlSF,  CSubfield* RecSF, int WithLinking, std::string Lang);
+    int CheckChar( std::string sOneChar, std::string sCheckString);
     };
 
 #endif

@@ -29,14 +29,14 @@ int main(int argc, char* argv[])
 {
    if (argc<2 || argc>3 || (argc==3 && strcmp(argv[2], "-k")))
    {
-      cerr << "Usage: marcmand <configuration file>\n";
-//      cerr << "Usage: marcmand <configuration file> [-k]\n";
-//      cerr << "         -k kills marcmand (using pid file from configuration)\n";
+      std::cerr << "Usage: marcmand <configuration file>\n";
+//      std::cerr << "Usage: marcmand <configuration file> [-k]\n";
+//      std::cerr << "         -k kills marcmand (using pid file from configuration)\n";
       return 1;
    }
 
    CConvertor* MyC=new CConvertor();
-   ofstream log;
+   std::ofstream log;
    int logging = 0;
 
    CConfigFileReader* MyConfFile=new CConfigFileReader();
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
    if (MyConfFile->ReadFile(argv[1],&(MyC->Variables)))
    {
-      cerr << "marcmand: can't read configuration file " << argv[1] << "\n";
+      std::cerr << "marcmand: can't read configuration file " << argv[1] << "\n";
       return 1;
    }
 
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
    {
       if(CodeFile!=1)
       {
-         cerr << "marcmand: this version works only with coded files\n";
+         std::cerr << "marcmand: this version works only with coded files\n";
          return 0;
       }
       MyC->SetLog(&log,0);
@@ -85,19 +85,19 @@ int main(int argc, char* argv[])
 
    if (MyC->Variables.count("SourceFormat")==0)
    {
-      cerr << "marcmand: SourceFormat is not set\n"; 
+      std::cerr << "marcmand: SourceFormat is not set\n"; 
       return 1;
    }
    int SFormat=0;      
-   string SourceFormat = *(MyC->Variables["SourceFormat"]->sName);    
+   std::string SourceFormat = *(MyC->Variables["SourceFormat"]->sName);    
 
    if (MyC->Variables.count("DestinationFormat")==0)
    {
-      cerr << "marcmand: DestinationFormat is not set\n"; 
+      std::cerr << "marcmand: DestinationFormat is not set\n"; 
       return 1;
    }
    int DFormat=0;
-   string DestinationFormat = *(MyC->Variables["DestinationFormat"]->sName);        
+   std::string DestinationFormat = *(MyC->Variables["DestinationFormat"]->sName);        
     
    if (SourceFormat=="iso") SFormat=1;
    if (SourceFormat=="txt") SFormat=2;
@@ -109,18 +109,18 @@ int main(int argc, char* argv[])
     
    if(SFormat==0)
    {
-      cerr << "marcmand: unknown SourceFormat type\n"; 
+      std::cerr << "marcmand: unknown SourceFormat type\n"; 
       return 1;
    }
     
    if(DFormat==0)
    {
-      cerr << "marcmand: unknown DestinationFormat type\n"; 
+      std::cerr << "marcmand: unknown DestinationFormat type\n"; 
       return 1;
    }
 
-   string listenAddr;
-   string protoStr;
+   std::string listenAddr;
+   std::string protoStr;
    int protocol, workers;
    if (MyC->Variables.count("Protocol")==0)
       protoStr = "unix";
@@ -138,12 +138,12 @@ int main(int argc, char* argv[])
       
       if (workers<=0)
       {
-         cerr << "marcmand: invalid Workers number\n"; 
+         std::cerr << "marcmand: invalid Workers number\n"; 
          return 1;
       }
    }
    if (MyC->Variables.count("PidFile")==0)
-      ; //cerr << "marcmand: warning: no PidFile in configuration (-k option won't work)\n";
+      ; //std::cerr << "marcmand: warning: no PidFile in configuration (-k option won't work)\n";
    else
    {
       FILE *pidFile;
@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
       pidFile = fopen(MyC->Variables["PidFile"]->sName->c_str(), "w");
       if (pidFile==NULL)
       {
-         cerr << "marcmand: warning: can't open PidFile " <<
+         std::cerr << "marcmand: warning: can't open PidFile " <<
             MyC->Variables["PidFile"]->sName->c_str() << " (" <<
             strerror(errno) << ")\n";
       }
@@ -166,14 +166,14 @@ int main(int argc, char* argv[])
    else if (protoStr=="tcp") protocol = PF_INET;
    else
    {
-      cerr << "marcmand: unknown Protocol type\n"; 
+      std::cerr << "marcmand: unknown Protocol type\n"; 
       return 1;
    }
 
       //Load inicialize
    if (MyC->LoadAll(CodeFile))
    {
-      cerr << "marcmand: error while loading rule set: " + MyC->sError + "\n";
+      std::cerr << "marcmand: error while loading rule set: " + MyC->sError + "\n";
       return 1;
    }
    
@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
    socklen_t addrLen, addrLen2;
    int retVal, accFail, wrlen;
    char* TRec;
-   string myR, *OutS;
+   std::string myR, *OutS;
 
    if (protocol==PF_INET)
    {
@@ -194,7 +194,7 @@ int main(int argc, char* argv[])
       
       if (inetAddr.sin_port==0)
       {
-         cerr << "marcmand: ListenAddress must be valid port number (1-65535)\n";
+         std::cerr << "marcmand: ListenAddress must be valid port number (1-65535)\n";
          return 1;
       }
       
@@ -206,7 +206,7 @@ int main(int argc, char* argv[])
       unixAddr.sun_family = AF_UNIX;
       if (listenAddr.length()>=UNIX_PATH_MAX)
       {
-         cerr << "marcmand: ListenAddress too long\n";
+         std::cerr << "marcmand: ListenAddress too long\n";
          return 1;
       }
       strcpy(unixAddr.sun_path, listenAddr.c_str());

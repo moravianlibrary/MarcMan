@@ -14,14 +14,14 @@ extern "C" {
 
 class CMarcManPlugin_md5: public CMarcManPlugin {
    private:
-      string name;
-      vector<string> functionList;
-      string computeHash(const string *input);
+      std::string name;
+      std::vector<std::string> functionList;
+      std::string computeHash(const std::string *input);
 
    public:
-      virtual string getName() { return name; }
-      virtual vector<string> getFunctionList() { return functionList; }
-      virtual int callFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const string *functionName, vector<M_EXPRESSION_ELEMENT *> *functionArguments, M_EXPRESSION_ELEMENT *returnValue );
+      virtual std::string getName() { return name; }
+      virtual std::vector<std::string> getFunctionList() { return functionList; }
+      virtual int callFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const std::string *functionName, std::vector<M_EXPRESSION_ELEMENT *> *functionArguments, M_EXPRESSION_ELEMENT *returnValue );
       CMarcManPlugin_md5();
 };
 
@@ -32,7 +32,7 @@ CMarcManPlugin_md5::CMarcManPlugin_md5() {
 
 
 
-int CMarcManPlugin_md5::callFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const string *functionName, vector<M_EXPRESSION_ELEMENT *> *functionArguments, M_EXPRESSION_ELEMENT *returnValue ) {
+int CMarcManPlugin_md5::callFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *outputRecord, const std::string *functionName, std::vector<M_EXPRESSION_ELEMENT *> *functionArguments, M_EXPRESSION_ELEMENT *returnValue ) {
 
     if(*functionName == "ComputeHash") {
         if(functionArguments->size() == 1 && (*functionArguments)[0]->iType == EX_STRING) {
@@ -53,7 +53,7 @@ int CMarcManPlugin_md5::callFunction(CMarcAnalyzer *inputRecord, CMarcAnalyzer *
     }
 }
 
-string CMarcManPlugin_md5::computeHash(const string *input) {
+std::string CMarcManPlugin_md5::computeHash(const std::string *input) {
    char buf[33];
    MD5_CTX mdContext;
     

@@ -2,7 +2,7 @@
 
 #define CUD_UNICODE_DATA "Unicode_Data.txt"
 
-using namespace std;
+//using namespace std;
 
 typedef unsigned int UINT32;
 typedef unsigned char UINT8;
@@ -29,51 +29,51 @@ typedef struct Utf8Table {
 class CUnicodeCharacterData {
     public:
         UINT32 code;
-        string name;
+        std::string name;
         EGeneralCategory generalCategory;
         unsigned short canonicalCombiningClass;
         EBidiClass bidiClass;
         EDecompositionType decompositionType;
-        vector<UINT32> decompositionMapping;
+        std::vector<UINT32> decompositionMapping;
         ENumericType numericType;
-        string numericValue;
+        std::string numericValue;
         EBidiMirrored bidiMirrored;
-        string unicode1Name;
-        string isoComment;
-        vector<UINT32> simpleUppecaseMapping;
-        vector<UINT32> simpleLowercaseMapping;
-        vector<UINT32> simpleTitlecaseMapping;
+        std::string unicode1Name;
+        std::string isoComment;
+        std::vector<UINT32> simpleUppecaseMapping;
+        std::vector<UINT32> simpleLowercaseMapping;
+        std::vector<UINT32> simpleTitlecaseMapping;
 };
 
 class CUnicodeCharacterDecomposition {
     public:
         UINT32 code;
-        vector<UINT32> decomposition;
+        std::vector<UINT32> decomposition;
 };
 
 class CUnicodeDatabase {
     private:
-        vector<CUnicodeCharacterData> dataTable;
-        vector<CUnicodeCharacterDecomposition> decompositionTable;
+        std::vector<CUnicodeCharacterData> dataTable;
+        std::vector<CUnicodeCharacterDecomposition> decompositionTable;
 
         static SUtf8Table utf8Table[];
 
-        map<string, EGeneralCategory> mapGeneralCategory;
-        map<string, EBidiClass> mapBidiClass;
-        map<string, EBidiMirrored> mapBidiMirrored;
-        map<string, EDecompositionType> mapDecompositionType;
+	std::map<std::string, EGeneralCategory> mapGeneralCategory;
+	std::map<std::string, EBidiClass> mapBidiClass;
+	std::map<std::string, EBidiMirrored> mapBidiMirrored;
+	std::map<std::string, EDecompositionType> mapDecompositionType;
 
         int buildDecompositionTable();
-        int parse(CUnicodeCharacterData&, const string&);
-        int uCharDecompose(vector<UINT32>&, const UINT32);
-        int unicodeDecompose(vector<UINT32>&, const vector<UINT32>&);
-        int utf8ToUnicode(vector<UINT32>&, const string&);
-        int unicodeToUtf8(string&, const vector<UINT32>&);
+        int parse(CUnicodeCharacterData&, const std::string&);
+        int uCharDecompose(std::vector<UINT32>&, const UINT32);
+        int unicodeDecompose(std::vector<UINT32>&, const std::vector<UINT32>&);
+        int utf8ToUnicode(std::vector<UINT32>&, const std::string&);
+        int unicodeToUtf8(std::string&, const std::vector<UINT32>&);
         CUnicodeCharacterData *unicodeCharacterDataFind(UINT32);
 
     public:
-        int load(const string&);
-        int utf8ToAscii(string&, const string&);
+        int load(const std::string&);
+        int utf8ToAscii(std::string&, const std::string&);
         CUnicodeDatabase();
 };
 

@@ -21,7 +21,7 @@ char LINKING_SUBFIELD_SEP_TXT[]       = "$1";
 char LINKING_SUBFIELD_SEP_ALEPH[]     = "$$1";
 
 
-int CMarcAnalyzer::SetLog(ofstream* lg, int LogAllMes)
+int CMarcAnalyzer::SetLog(std::ofstream* lg, int LogAllMes)
 {
 	log=lg;
 	LogAll=LogAllMes;
@@ -30,8 +30,8 @@ int CMarcAnalyzer::SetLog(ofstream* lg, int LogAllMes)
 
 CSubfield::CSubfield()
 {
-    ID=new string("");
-    Value=new string("");
+    ID=new std::string("");
+    Value=new std::string("");
     LinkingField=new CField();
 }
 
@@ -70,9 +70,9 @@ void CMarcAnalyzer::CloneField(CField* Dest, CField* Sour)
 	}
 }
 
-string CMarcAnalyzer::OrdinalForm(int number, int size)
+std::string CMarcAnalyzer::OrdinalForm(int number, int size)
 {
-    string myNumber;
+    std::string myNumber;
     char buffer[20];
     
     sprintf(buffer,"%d",number);
@@ -83,7 +83,7 @@ string CMarcAnalyzer::OrdinalForm(int number, int size)
     return myNumber;
 }
 
-void CMarcAnalyzer::TrimLeft(string* sStr, char* ArraySep)
+void CMarcAnalyzer::TrimLeft(std::string* sStr, char* ArraySep)
 {
    int finds=1;
    int i;
@@ -104,7 +104,7 @@ void CMarcAnalyzer::TrimLeft(string* sStr, char* ArraySep)
     }
 }
 
-void CMarcAnalyzer::TrimRight(string* sStr, char* ArraySep)
+void CMarcAnalyzer::TrimRight(std::string* sStr, char* ArraySep)
 {
    int finds=1;
    int i;
@@ -126,21 +126,21 @@ void CMarcAnalyzer::TrimRight(string* sStr, char* ArraySep)
 }
 
 
-int CMarcAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, char* Separator)
+int CMarcAnalyzer::SplitString(std::string* strSplit, std::vector<std::string*>* outArray, char* Separator)
 {
 	int iPos = 0;
 	int newPos = -1;
-    string sSeparator=Separator;
+    std::string sSeparator=Separator;
 	int sizeS2 = sSeparator.size();
 	int isize = strSplit->size();
 
-	vector<int> positions;
+	std::vector<int> positions;
 
 	newPos = strSplit->find(Separator, 0);
 
     if(newPos==(-1)) 
     {
-        outArray->push_back(new string(strSplit->substr(0)));
+        outArray->push_back(new std::string(strSplit->substr(0)));
         return 0;
     }
 
@@ -153,7 +153,7 @@ int CMarcAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, char
     
 	for(int i=0;i<=positions.size();i++)
 	{
-		string s;
+		std::string s;
 		if(i==0) 
         { 
             s = strSplit->substr(0, positions[i]);
@@ -173,12 +173,12 @@ int CMarcAnalyzer::SplitString(string* strSplit, vector<string*>* outArray, char
 			    }
 		    }
         }
-		outArray->push_back(new string(s));
+		outArray->push_back(new std::string(s));
 	}
 	return 0;
 }
 
-void CMarcAnalyzer::Replace(string* strSplit, char* findStr, char* repStr)
+void CMarcAnalyzer::Replace(std::string* strSplit, char* findStr, char* repStr)
 {
      int Poss;
      while((Poss=strSplit->find(findStr))!=-1)
@@ -188,7 +188,7 @@ void CMarcAnalyzer::Replace(string* strSplit, char* findStr, char* repStr)
 }
 
 
-int CMarcAnalyzer::OpenRecordFromString(string* strRecord, int OpenMode)
+int CMarcAnalyzer::OpenRecordFromString(std::string* strRecord, int OpenMode)
 {
 if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
@@ -197,8 +197,8 @@ if (LogAll) { //Debug
 (*log)<< "OpenMode: " << OpenMode << "\n";
 (*log)<< "---------------------------------------------\n";
 } //End Debug
-    string outString;
-    string empty="";
+    std::string outString;
+    std::string empty="";
 
     for(int g=0;g<Fields.size();g++)
         delete Fields[g];
@@ -220,8 +220,8 @@ if (LogAll) { //Debug
             g_Error="ISO Format involved 2";
             return 1;
         }
-        string SizesString=strRecord->substr(24,FirstSep-24); //delky fieldu na zacatku ISO zaznamu
-        string BodyString=strRecord->substr(FirstSep+1); //samotna data bez identifikatoru poli
+        std::string SizesString=strRecord->substr(24,FirstSep-24); //delky fieldu na zacatku ISO zaznamu
+        std::string BodyString=strRecord->substr(FirstSep+1); //samotna data bez identifikatoru poli
         if (SizesString.size()%12!=0)
 		{
             g_Error="ISO Format involved 3";
@@ -232,10 +232,10 @@ if (LogAll) { //Debug
             int Begin;
             int Length;
 
-            string sTag=SizesString.substr(i*12,3);
-            string sLength=SizesString.substr(i*12+3,4);
-            string sStart=SizesString.substr(i*12+7,5);
-            Begin=atoi(sStart.c_str()); //velikosti prevedu na string
+            std::string sTag=SizesString.substr(i*12,3);
+            std::string sLength=SizesString.substr(i*12+3,4);
+            std::string sStart=SizesString.substr(i*12+7,5);
+            Begin=atoi(sStart.c_str()); //velikosti prevedu na std::string
             Length=atoi(sLength.c_str());
             if (Length==0)  
             {
@@ -248,8 +248,8 @@ if (LogAll) { //Debug
                 return 1;
 			}
             outString=BodyString.substr(Begin,Length);
-            string ID1="";
-            string ID2="";
+            std::string ID1="";
+            std::string ID2="";
 
             //zjistim zda ma pole indikatory
             int NoIndicator=0;
@@ -278,7 +278,7 @@ if (LogAll) { //Debug
             //Ziskam ukazatel na prave pridany Field
             Replace(&outString, ISO_FIELD_SEPARATOR,"");
             
-            //Tato funkce rozemere string bez Indikatoru od kazdeho pole
+            //Tato funkce rozemere std::string bez Indikatoru od kazdeho pole
             if ( AddOneField(&outString,NewField,ISO_SUBFIELD_SEPARATOR,LINKING_SUBFIELD_SEP_ISO) ) {
                 return 1;
             };
@@ -290,12 +290,12 @@ if (LogAll) { //Debug
     case LOAD_ALEPH_FORMAT:
         {
         int i;
-        vector<string *> aLines;
+        std::vector<std::string *> aLines;
 
         TrimLeft(strRecord,"\n\r\t");
         TrimRight(strRecord,"\n\r\t");        
         
-        //Splitovani stringu
+        //Splitovani std::stringu
         SplitString(strRecord, &aLines, ALEPH_FIELD_SEPARATOR);
         
         //IDCKO do FieldPrefix
@@ -312,10 +312,10 @@ if (LogAll) { //Debug
                   g_Error="ALEPH Format involved - Invalid size line";
                   return 1;    
             }   
-            string sTag=aLines[i]->substr(LENGTH_ID_ALEPH+1,3);
-            string ID1=aLines[i]->substr(LENGTH_ID_ALEPH+4,1);
-            string ID2=aLines[i]->substr(LENGTH_ID_ALEPH+5,1);
-            string Line=aLines[i]->substr(LENGTH_ID_ALEPH+9);
+            std::string sTag=aLines[i]->substr(LENGTH_ID_ALEPH+1,3);
+            std::string ID1=aLines[i]->substr(LENGTH_ID_ALEPH+4,1);
+            std::string ID2=aLines[i]->substr(LENGTH_ID_ALEPH+5,1);
+            std::string Line=aLines[i]->substr(LENGTH_ID_ALEPH+9);
             //Pridam pole
 
             if(sTag==ALEPH_LAB_IDENTIFIKATOR)
@@ -337,7 +337,7 @@ if (LogAll) { //Debug
                 //outString.Replace(TEXT_FIELD_SEPARATOR,"");
                TrimLeft(&Line,"\n\r\t");
                TrimRight(&Line,"\n\r\t");
-                //Tato funkce rozebere string bez Indikatoru od kazdeho pole
+                //Tato funkce rozebere std::string bez Indikatoru od kazdeho pole
                 if ( AddOneField(&Line,NewField,ALEPH_SUBFIELD_SEPARATOR,LINKING_SUBFIELD_SEP_ALEPH) ) {
                     return 1;
                 };
@@ -352,12 +352,12 @@ if (LogAll) { //Debug
     case LOAD_TEXT_FORMAT:
         {
         int i;
-        vector<string *> aLines;
+        std::vector<std::string *> aLines;
         
         TrimLeft(strRecord,"\n\r\t");
         TrimRight(strRecord,"\n\r\t");
 
-        //Splitovani stringu
+        //Splitovani std::stringu
         SplitString(strRecord, &aLines, TEXT_FIELD_SEPARATOR);
         //odstranìní praznych radek
         for (i=aLines.size()-1;i>(-1);i--)
@@ -386,10 +386,10 @@ if (LogAll) { //Debug
 				g_Error="Text Format involved - Invalid Size Field"; 
 				return 0;
 			}
-            string sTag=aLines[i]->substr(0,3);
-            string Line=aLines[i]->substr(3);
-            string ID1="";
-            string ID2="";
+            std::string sTag=aLines[i]->substr(0,3);
+            std::string Line=aLines[i]->substr(3);
+            std::string ID1="";
+            std::string ID2="";
             int NoIndicator=0;
             for(int j=0;j<aNoIdenField.size();j++)
             {
@@ -412,7 +412,7 @@ if (LogAll) { //Debug
             TrimLeft(&Line,"\n\r\t");
             TrimRight(&Line,"\n\r\t");
 
-            //Tato funkce rozebere string bez Indikatoru od kazdeho pole
+            //Tato funkce rozebere std::string bez Indikatoru od kazdeho pole
             
             if ( AddOneField(&Line,NewField,TEXT_SUBFIELD_SEPARATOR,LINKING_SUBFIELD_SEP_TXT) ) {
                 return 1;
@@ -432,7 +432,7 @@ if (LogAll) { //Debug
     return 0;
 }
 
-bool CMarcAnalyzer::MayBeLinking(string Field) 
+bool CMarcAnalyzer::MayBeLinking(std::string Field) 
 {
     for(int b=0;b<aLinkingField.size();b++) {
 	   if (*(aLinkingField[b])==Field)
@@ -442,7 +442,7 @@ bool CMarcAnalyzer::MayBeLinking(string Field)
 }
 
 
-int CMarcAnalyzer::AddOneField(string* sField, CField* pField, char* SubSeparator, char* LinkingSeparator)
+int CMarcAnalyzer::AddOneField(std::string* sField, CField* pField, char* SubSeparator, char* LinkingSeparator)
 {
 if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
@@ -453,13 +453,13 @@ if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
 } //End Debug
     int i;
-    string Subfield_Ident=LINKING_SUBFIELD_IDENTIFICATOR;
+    std::string Subfield_Ident=LINKING_SUBFIELD_IDENTIFICATOR;
     CSubfield* NewSubfield;
-    vector<string *> SplitArray;
+    std::vector<std::string *> SplitArray;
     
     int LengthSep=strlen(SubSeparator);
 
-    //Prazdny string
+    //Prazdny std::string
     if (sField->size() ==0)
         return 0;
 
@@ -468,7 +468,7 @@ if (LogAll) { //Debug
     {
         if (sField->substr(LengthSep,1)==LINKING_SUBFIELD_IDENTIFICATOR && MayBeLinking(*(pField->ID))) //jde o vlozena pole? za $1
         {
-            SplitString(sField,&SplitArray,LinkingSeparator); //rozdelim string oddelovacem $1
+            SplitString(sField,&SplitArray,LinkingSeparator); //rozdelim std::string oddelovacem $1
             for (i=1;i<SplitArray.size();i++) //první je praznej
             {
                 if (SplitArray[i]->size()<4) //chybi identifikator vlozeneho pole a alespon neco za tim
@@ -488,12 +488,12 @@ if (LogAll) { //Debug
                 pField->ptrCollSubf.push_back(NewSubfield);
 
                 //První tri je ID pole a zbytek je samotne pole
-                string sTag=SplitArray[i]->substr(0,3);
-                string outString = SplitArray[i]->substr(3);
+                std::string sTag=SplitArray[i]->substr(0,3);
+                std::string outString = SplitArray[i]->substr(3);
 
                 //je vlozené pole NoIdenField?
-                string ID1="";
-                string ID2="";
+                std::string ID1="";
+                std::string ID2="";
 
                 int NoIndicator=0;
                 for(int i=0;i<aNoIdenField.size();i++)
@@ -585,16 +585,16 @@ if (LogAll) { //Debug
 
 int CMarcAnalyzer:: random_range(int lo, int hi) { 
     int range = (int) ((((float)rand()) / RAND_MAX) * (hi - lo + 1) + lo); 
-    //cout  << "random_range(" << lo << "," << hi << ")="<< range << "\n";
+    //std::cout  << "random_range(" << lo << "," << hi << ")="<< range << "\n";
     return range;
 }
 
-int CMarcAnalyzer::SerializeRecord(string *outString, string *Sizes, char* SubfieldSeparator, char* FieldSeparator, int Mode)
+int CMarcAnalyzer::SerializeRecord(std::string *outString, std::string *Sizes, char* SubfieldSeparator, char* FieldSeparator, int Mode)
 {
     long Size;
     long SubSize;
     long SubSubSize;
-    string outOne;
+    std::string outOne;
 
     int PreviousPoss=0;
     Size=Fields.size();
@@ -605,7 +605,7 @@ int CMarcAnalyzer::SerializeRecord(string *outString, string *Sizes, char* Subfi
     
     if ( codeVersion == VERSION_TESTING_E ) {
        randField = random_range(0, Size - 1); 
-      // cout  << "RR" << randField << "\n";
+      // std::cout  << "RR" << randField << "\n";
     }   
        
     for(int i=0;i<Size;i++)
@@ -620,7 +620,7 @@ int CMarcAnalyzer::SerializeRecord(string *outString, string *Sizes, char* Subfi
         int NoIndicator=0;
         for(int b=0;b<aNoIdenField.size();b++)
         {
-            //cout   <<  *(aNoIdenField[b]);  
+            //std::cout   <<  *(aNoIdenField[b]);  
 			if (*(aNoIdenField[b])==*(Fields[i]->ID))
                 NoIndicator=1;
         }
@@ -767,7 +767,7 @@ int CMarcAnalyzer::FillFieldsDepth()
     return 0;
 }
 
-int CMarcAnalyzer::FillSubfieldsDepth(vector<CSubfield*>* pcollS, int Link)
+int CMarcAnalyzer::FillSubfieldsDepth(std::vector<CSubfield*>* pcollS, int Link)
 {
     long Size=pcollS->size();
     long Counter;
@@ -788,14 +788,14 @@ int CMarcAnalyzer::FillSubfieldsDepth(vector<CSubfield*>* pcollS, int Link)
 }
 
 
-string* CMarcAnalyzer::ValueByCommand(string* Command)
+std::string* CMarcAnalyzer::ValueByCommand(std::string* Command)
 {
-    string IDF;      //Field
-    string IDS;          //Subfile
-    string LAB;
+    std::string IDF;      //Field
+    std::string IDS;          //Subfile
+    std::string LAB;
     long IF;      //pozice fieldu
     long IS;   //pozicesubfieldu
-    string ILF;      //Cislo linkovaciho fieldu
+    std::string ILF;      //Cislo linkovaciho fieldu
     int Ind;
     int Start;
     int Stop;
@@ -807,7 +807,7 @@ string* CMarcAnalyzer::ValueByCommand(string* Command)
     if (RecognizeCommand(Command, &LAB, &IDF, &ILF, &IDS, &IF, &IS, &Ind, &Start, &Stop))
     {
         g_Error="RecognizeCommand failed";
-        return new string("");
+        return new std::string("");
     }
     if (LAB!="")
     {
@@ -816,39 +816,39 @@ string* CMarcAnalyzer::ValueByCommand(string* Command)
         {
             if (Start>Stop)
             {
-                return new string("");
+                return new std::string("");
             }
             if( Start>24) 
             {
-                return new string("");
+                return new std::string("");
             }
-            return new string(g_Label->substr(Start-1,Stop-Start+1)); 
+            return new std::string(g_Label->substr(Start-1,Stop-Start+1)); 
         }
         else
         {
-            return new string(*g_Label);
+            return new std::string(*g_Label);
         }
     }
     return GetValueFromC(IDF,ILF,IDS,IF,IS,Ind,Start,Stop,&PointerField,&PointerSubField,&PointerLinkingField);
 }                      
 
 
-int CMarcAnalyzer::RecognizeCommand(string* Comm, string *LAB, string *IDF, string *ILF, string *IDS, long* IF, long* IS, int* Indic, int* Sta, int* Sto)
+int CMarcAnalyzer::RecognizeCommand(std::string* Comm, std::string *LAB, std::string *IDF, std::string *ILF, std::string *IDS, long* IF, long* IS, int* Indic, int* Sta, int* Sto)
 {
-    string OutStr;
+    std::string OutStr;
 
-    string IDField;      //Field
-    string IDSub;          //Subfile
+    std::string IDField;      //Field
+    std::string IDSub;          //Subfile
     long IndexField=0;      //pozice fieldu
     long IndexSubField=0;   //pozicesubfieldu
-    string LinkField;      //Cislo linkovaciho fieldu
+    std::string LinkField;      //Cislo linkovaciho fieldu
     int Indikator=0;
     int Start=-1;
     int Stop=-1;
 
     int Pointer; 
-    string mV;
-    string CommNext;
+    std::string mV;
+    std::string CommNext;
 
     //Pole
     Pointer=0;
@@ -938,7 +938,7 @@ int CMarcAnalyzer::RecognizeCommand(string* Comm, string *LAB, string *IDF, stri
                 if (CommNext=="I") //Indikator
                 {
                     if (Comm->length()<Pointer+1) return 1;
-                    string CommNext2=Comm->substr(Pointer+1,1);
+                    std::string CommNext2=Comm->substr(Pointer+1,1);
                     if (CommNext2=="1")
                     {
                         Indikator=1;
@@ -1017,10 +1017,10 @@ int CMarcAnalyzer::RecognizeCommand(string* Comm, string *LAB, string *IDF, stri
 }
    
 
-string* CMarcAnalyzer::GetValueFromC(string IDField,string LinkField, string IDSub,long IndexField,long IndexSubField, int Indikator, int Start, int Stop, long* PointerField, long* PointerSubField, long* PointerLinkingField)
+std::string* CMarcAnalyzer::GetValueFromC(std::string IDField, std::string LinkField, std::string IDSub, long IndexField, long IndexSubField, int Indikator, int Start, int Stop, long* PointerField, long* PointerSubField, long* PointerLinkingField)
 {
-    string sID;
-    string outString="";
+    std::string sID;
+    std::string outString="";
     
     CField *NowF = 0;
     CSubfield *NowS = 0;
@@ -1043,7 +1043,7 @@ string* CMarcAnalyzer::GetValueFromC(string IDField,string LinkField, string IDS
             break;
         }
     }
-    if (Serched==0) return new string(outString);
+    if (Serched==0) return new std::string(outString);
 
     
     if (LinkField!="")
@@ -1060,7 +1060,7 @@ string* CMarcAnalyzer::GetValueFromC(string IDField,string LinkField, string IDS
                 break;
             }
         }
-        if (Serched==0) return new string(outString);
+        if (Serched==0) return new std::string(outString);
     }
     
     
@@ -1069,16 +1069,16 @@ string* CMarcAnalyzer::GetValueFromC(string IDField,string LinkField, string IDS
     {
         if (Indikator==1)
         {
-          return new string(*(NowF->ID1));
+          return new std::string(*(NowF->ID1));
         }
         if (Indikator==2)
         {
-          return new string(*(NowF->ID2));
+          return new std::string(*(NowF->ID2));
         }
-        return new string("");
+        return new std::string("");
     }
 
-    if (IDSub=="") return new string("");
+    if (IDSub=="") return new std::string("");
 
     if (IDSub==" ") IDSub="";
     Size=NowF->ptrCollSubf.size();
@@ -1094,23 +1094,23 @@ string* CMarcAnalyzer::GetValueFromC(string IDField,string LinkField, string IDS
         }
     }
 
-    if (Serched==0) return new string("");
+    if (Serched==0) return new std::string("");
 
-    if (Start==(-1)) return new string(*(NowS->Value));
+    if (Start==(-1)) return new std::string(*(NowS->Value));
 
     if (Start-1<Stop && Stop<outString.length()+1) 
     {
-        return new string(NowS->Value->substr(Start-1,Stop-Start+1));
+        return new std::string(NowS->Value->substr(Start-1,Stop-Start+1));
     }
     
-    return new string("");
+    return new std::string("");
 }
      
 
-string* CMarcAnalyzer::GetSerializeRecord(long Mode)
+std::string* CMarcAnalyzer::GetSerializeRecord(long Mode)
 {
-	string OutString;
-    string SizesString;
+    std::string OutString;
+    std::string SizesString;
 
     SortFields();
         
@@ -1118,7 +1118,7 @@ string* CMarcAnalyzer::GetSerializeRecord(long Mode)
     {
         SerializeRecord(&OutString,&SizesString, ISO_SUBFIELD_SEPARATOR, ISO_FIELD_SEPARATOR, LOAD_ISO_FORMAT);     
         //zapsani delky
-        string sL=OrdinalForm(SizesString.length()+OutString.length()+24+2,5);
+        std::string sL=OrdinalForm(SizesString.length()+OutString.length()+24+2,5);
         sL+=g_Label->substr(5,7);
         
         sL+=OrdinalForm(SizesString.length()+24+1,5);
@@ -1139,19 +1139,19 @@ string* CMarcAnalyzer::GetSerializeRecord(long Mode)
         SerializeRecord(&OutString,&SizesString, ALEPH_SUBFIELD_SEPARATOR, ALEPH_FIELD_SEPARATOR, LOAD_ALEPH_FORMAT);     
         OutString=*(g_FieldPrefix) + " LDR   "+ *(g_Format) + " "+*(g_Label)+ ALEPH_FIELD_SEPARATOR + OutString + ALEPH_RECORD_SEPARATOR;  
     }
-	return new string(OutString);
+	return new std::string(OutString);
 }
 
 
 
-void CMarcAnalyzer::SetValueByCommand(string* Command, string* Value, long IField, long ISubfield, long Add)
+void CMarcAnalyzer::SetValueByCommand(std::string* Command, std::string* Value, long IField, long ISubfield, long Add)
 {
-    string IDF;      //Field
-    string IDS;          //Subfile
-    string LAB;
+    std::string IDF;      //Field
+    std::string IDS;          //Subfile
+    std::string LAB;
     long IF;      //pozice fieldu
     long IS;   //pozicesubfieldu
-    string ILF;      //Cislo linkovaciho fieldu
+    std::string ILF;      //Cislo linkovaciho fieldu
     int Ind;
     int Start;
     int Stop;
@@ -1177,8 +1177,8 @@ void CMarcAnalyzer::SetValueByCommand(string* Command, string* Value, long IFiel
         {
             if (Start-1<Stop && Stop<25) 
                 {
-                    string Before=g_Label->substr(0,Start-1);
-                    string After=g_Label->substr(Stop);
+                    std::string Before=g_Label->substr(0,Start-1);
+                    std::string After=g_Label->substr(Stop);
                     if ((Stop-Start+1)>Value->length())
                     {
                         *g_Label=Before;
@@ -1210,7 +1210,7 @@ void CMarcAnalyzer::SetValueByCommand(string* Command, string* Value, long IFiel
 
 
 
-int CMarcAnalyzer::SetValueFromC(string* Value, string *IDField, string* LinkField, string* IDSub,long IndexField,long IndexSubField, int Indikator, int Start, int Stop, int Add)
+int CMarcAnalyzer::SetValueFromC(std::string* Value, std::string *IDField, std::string* LinkField, std::string* IDSub,long IndexField,long IndexSubField, int Indikator, int Start, int Stop, int Add)
 {
     long Size;
     CField* NewField;
@@ -1320,15 +1320,15 @@ int CMarcAnalyzer::SetValueFromC(string* Value, string *IDField, string* LinkFie
     if (Start-1<Stop) 
     {
         //Zjistíme stávající hodnotu
-        string mValueStr=*(NewSubfield->Value);
-        string outStr="";
+        std::string mValueStr=*(NewSubfield->Value);
+        std::string outStr="";
         //Doplníme tuto hodnotu na délku do stop
         for(i=mValueStr.length();i<Stop;i++)
         {
             mValueStr=mValueStr+" ";
         }
-        string Before=mValueStr.substr(0,Start-1);
-        string After=mValueStr.substr(Stop);
+        std::string Before=mValueStr.substr(0,Start-1);
+        std::string After=mValueStr.substr(Stop);
         //S mùže být menší než je požadovaná délka
         if ((Stop-Start+1)>Value->length())
         {
@@ -1354,7 +1354,7 @@ int CMarcAnalyzer::SetValueFromC(string* Value, string *IDField, string* LinkFie
 
 
 
-long CMarcAnalyzer::MaxFieldIndex(string* sIDF)
+long CMarcAnalyzer::MaxFieldIndex(std::string* sIDF)
 {
 	long Size;
     Size=Fields.size();
@@ -1371,7 +1371,7 @@ long CMarcAnalyzer::MaxFieldIndex(string* sIDF)
 	return MaxIndex;
 } 
 
-long CMarcAnalyzer::MaxLinkingFieldIndex(string* sIDF, long IndexField, string* sIDL)
+long CMarcAnalyzer::MaxLinkingFieldIndex(std::string* sIDF, long IndexField, std::string* sIDL)
 {
 if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
@@ -1420,7 +1420,7 @@ if (LogAll) { //Debug
 
 
 
-long CMarcAnalyzer::MaxSubfieldIndex(string* sIDF, string* sSubID, long FIndex)
+long CMarcAnalyzer::MaxSubfieldIndex(std::string* sIDF, std::string* sSubID, long FIndex)
 {
     long Size;	
 	Size=Fields.size();
@@ -1453,7 +1453,7 @@ long CMarcAnalyzer::MaxSubfieldIndex(string* sIDF, string* sSubID, long FIndex)
 
 
 
-long CMarcAnalyzer::MaxLinkingSubfieldIndex(string* sIDF, string* sIDL, string* sSubID, long FIndex)
+long CMarcAnalyzer::MaxLinkingSubfieldIndex(std::string* sIDF, std::string* sIDL, std::string* sSubID, long FIndex)
 {
     int i;
 	long Size;	
@@ -1502,7 +1502,7 @@ long CMarcAnalyzer::MaxLinkingSubfieldIndex(string* sIDF, string* sIDL, string* 
 
 
 
-long CMarcAnalyzer::MaxIndexByCommand(string* Command, long FIndex)
+long CMarcAnalyzer::MaxIndexByCommand(std::string* Command, long FIndex)
 {
 if (LogAll) { //Debug
 (*log)<< "---------------------------------------------\n";
@@ -1511,12 +1511,12 @@ if (LogAll) { //Debug
 (*log)<< "FIndex: " << FIndex << "\n";
 (*log)<< "---------------------------------------------\n";
 } //End Debug
-    string IDF;      //Field
-    string IDS;          //Subfiles
-    string LAB;
+    std::string IDF;      //Field
+    std::string IDS;          //Subfiles
+    std::string LAB;
     long IF;      //pozice fieldu
     long IS;   //pozicesubfieldu
-    string ILF;      //Cislo linkovaciho fieldu
+    std::string ILF;      //Cislo linkovaciho fieldu
     int Ind;
     int Start;
     int Stop;
@@ -1575,14 +1575,14 @@ if (LogAll) { //Debug
 
 
 
-string* CMarcAnalyzer::ValueByCommandSetPoss(string* Command, long loIF, long loIS)
+std::string* CMarcAnalyzer::ValueByCommandSetPoss(std::string* Command, long loIF, long loIS)
 {
-    string IDF;      //Field
-    string IDS;          //Subfile
-    string LAB;
+    std::string IDF;      //Field
+    std::string IDS;          //Subfile
+    std::string LAB;
     long IF;      //pozice fieldu
     long IS;   //pozicesubfieldu
-    string ILF;      //Cislo linkovaciho fieldu
+    std::string ILF;      //Cislo linkovaciho fieldu
     int Ind;
     int Start;
     int Stop;
@@ -1594,7 +1594,7 @@ string* CMarcAnalyzer::ValueByCommandSetPoss(string* Command, long loIF, long lo
     if (RecognizeCommand(Command, &LAB, &IDF, &ILF, &IDS, &IF, &IS, &Ind, &Start, &Stop))
     {
         g_Error="RecognizeCommand failed";
-        return new string("");
+        return new std::string("");
     }
     if (LAB!="")
     {
@@ -1603,17 +1603,17 @@ string* CMarcAnalyzer::ValueByCommandSetPoss(string* Command, long loIF, long lo
         {
             if (Start>Stop)
             {
-                return new string("");
+                return new std::string("");
             }
             if( Start>24) 
             {
-                return new string("");
+                return new std::string("");
             }
-            return new string(g_Label->substr(Start-1,Stop-Start+1));
+            return new std::string(g_Label->substr(Start-1,Stop-Start+1));
         }
         else
         {
-            return new string(*g_Label);
+            return new std::string(*g_Label);
         }
     }
     return GetValueFromC(IDF,ILF,IDS,loIF,loIS,Ind,Start,Stop,&PointerField,&PointerSubField,&PointerLinkingField);
@@ -1623,14 +1623,14 @@ string* CMarcAnalyzer::ValueByCommandSetPoss(string* Command, long loIF, long lo
 
 
 
-string* CMarcAnalyzer::ValueByCSetPossWithPointers(string* Command, long loIF, long loIS, long PointerField, long PointerLinkingField, long PointerSubField)
+std::string* CMarcAnalyzer::ValueByCSetPossWithPointers(std::string* Command, long loIF, long loIS, long PointerField, long PointerLinkingField, long PointerSubField)
 {
-   string IDF;      //Field
-    string IDS;          //Subfile
-    string LAB;
+    std::string IDF;      //Field
+    std::string IDS;          //Subfile
+    std::string LAB;
     long IF;      //pozice fieldu
     long IS;   //pozicesubfieldu
-    string ILF;      //Cislo linkovaciho fieldu
+    std::string ILF;      //Cislo linkovaciho fieldu
     int Ind;
     int Start;
     int Stop;
@@ -1638,7 +1638,7 @@ string* CMarcAnalyzer::ValueByCSetPossWithPointers(string* Command, long loIF, l
     if (RecognizeCommand(Command, &LAB, &IDF, &ILF, &IDS, &IF, &IS, &Ind, &Start, &Stop))
     {
         g_Error="RecognizeCommand failed";
-        return new string("");
+        return new std::string("");
     }
     if (LAB!="")
     {
@@ -1647,17 +1647,17 @@ string* CMarcAnalyzer::ValueByCSetPossWithPointers(string* Command, long loIF, l
         {
             if (Start>Stop)
             {
-                return new string("");
+                return new std::string("");
             }
             if( Start>24) 
             {
-                return new string("");
+                return new std::string("");
             }
-            return new string(g_Label->substr(Start-1,Stop-Start+1));
+            return new std::string(g_Label->substr(Start-1,Stop-Start+1));
         }
         else
         {
-            return new string(*g_Label);
+            return new std::string(*g_Label);
         }
     }
     return GetValueFromC(IDF,ILF,IDS,loIF,loIS,Ind,Start,Stop,&PointerField,&PointerSubField,&PointerLinkingField);
@@ -1666,9 +1666,9 @@ string* CMarcAnalyzer::ValueByCSetPossWithPointers(string* Command, long loIF, l
 
 void CMarcAnalyzer::LoadCheck(const char* sPath)
 {   
-    vector<string *> Elements;
-    vector<string *> MarkElements;
-    string strAnalyzeText;    
+    std::vector<std::string *> Elements;
+    std::vector<std::string *> MarkElements;
+    std::string strAnalyzeText;    
     FILE *fr;
     
     if ((fr=fopen(sPath,"r"))== NULL)
@@ -1683,7 +1683,7 @@ void CMarcAnalyzer::LoadCheck(const char* sPath)
 		buffer[nBytesRead] = '\0';
 	    strAnalyzeText+=buffer;	
 	};       
-    string* strMark=new string(strAnalyzeText.length(), 'x');
+    std::string* strMark=new std::string(strAnalyzeText.length(), 'x');
  
 	MarkSections2(&strAnalyzeText,strMark,"/*","*/",'C','R',0);
 	FillMarkSection(strMark,'C','R');
@@ -1704,7 +1704,7 @@ void CMarcAnalyzer::LoadCheck(const char* sPath)
     FillMarkSection(strMark,'W','N');
     FillMarkSection(strMark,'Q','F');
     
-    //cout << *strMark << "\n";
+    //std::cout << *strMark << "\n";
 
     CutCommandByType(&strAnalyzeText,strMark,&Elements,&MarkElements);   
     
@@ -1726,7 +1726,7 @@ void CMarcAnalyzer::LoadCheck(const char* sPath)
          TrimRight(Elements[i],">");
          TrimRight(Elements[i],"{");
          TrimLeft(Elements[i],"}");
-         //cout << *(MarkElements)[i] << ":" << *(Elements)[i] << "\n";
+         //std::cout << *(MarkElements)[i] << ":" << *(Elements)[i] << "\n";
         }
     }
     
@@ -1746,19 +1746,19 @@ void CMarcAnalyzer::LoadCheck(const char* sPath)
     /*
     for(int i=0;i<Elements.size();i++)
     {
-        cout << *(MarkElements)[i] << ":" << *(Elements)[i] << "\n";
+        std::cout << *(MarkElements)[i] << ":" << *(Elements)[i] << "\n";
     }*/
         
     CField* ActualField = 0;
     CField* BeforeLinkingActualField = 0;
     CSubfield* ActualSubField = 0;
-    string Before = "";
-    string BeforeMark = "";
+    std::string Before = "";
+    std::string BeforeMark = "";
 
     for(int i=0;i<Elements.size();i++)
     {
-        string ActMark = *(MarkElements[i]);
-        string ActElem = *(Elements[i]);
+        std::string ActMark = *(MarkElements[i]);
+        std::string ActElem = *(Elements[i]);
         //nove pole
         if(ActMark=="M") {
            if(BeforeMark=="O") { //Vlozene pole
@@ -1817,23 +1817,23 @@ void CMarcAnalyzer::LoadCheck(const char* sPath)
     /*
     for(int i=0;i<ControlFields.size();i++)
     {
-        cout << "Field" << *(ControlFields[i]->ID) << "\n";
-        cout << "---------------------------------" << "\n";
-        cout << "ID1" << *(ControlFields[i]->ID1) << "\n";
-        cout << "ID2" << *(ControlFields[i]->ID2) << "\n";
+        std::cout << "Field" << *(ControlFields[i]->ID) << "\n";
+        std::cout << "---------------------------------" << "\n";
+        std::cout << "ID1" << *(ControlFields[i]->ID1) << "\n";
+        std::cout << "ID2" << *(ControlFields[i]->ID2) << "\n";
 
         for(int j=0;j<ControlFields[i]->ptrCollSubf.size();j++)
         {
-            cout << "Subfield: " << *(ControlFields[i]->ptrCollSubf[j]->ID) << "\n";
-            cout << "Value: " << *(ControlFields[i]->ptrCollSubf[j]->Value) << "\n";
-            cout << "Index: " << ControlFields[i]->ptrCollSubf[j]->Index << "\n";
+            std::cout << "Subfield: " << *(ControlFields[i]->ptrCollSubf[j]->ID) << "\n";
+            std::cout << "Value: " << *(ControlFields[i]->ptrCollSubf[j]->Value) << "\n";
+            std::cout << "Index: " << ControlFields[i]->ptrCollSubf[j]->Index << "\n";
             CField* LinkField = ControlFields[i]->ptrCollSubf[j]->LinkingField;
             if(*(LinkField->ID)!="") {
-               cout << "Linking: " << *(LinkField->ID) << "\n";
+               std::cout << "Linking: " << *(LinkField->ID) << "\n";
                for(int k=0;k<LinkField->ptrCollSubf.size();k++) {
-                  cout << "LINKING_Subfield: " << *(LinkField->ptrCollSubf[k]->ID) << "\n";
-                  cout << "LINKING_Value: " << *(LinkField->ptrCollSubf[k]->Value) << "\n";
-                  cout << "LINKING_Index: " << LinkField->ptrCollSubf[k]->Index << "\n";
+                  std::cout << "LINKING_Subfield: " << *(LinkField->ptrCollSubf[k]->ID) << "\n";
+                  std::cout << "LINKING_Value: " << *(LinkField->ptrCollSubf[k]->Value) << "\n";
+                  std::cout << "LINKING_Index: " << LinkField->ptrCollSubf[k]->Index << "\n";
                }
             }
         }
@@ -1848,13 +1848,13 @@ void CMarcAnalyzer::LoadCheck(const char* sPath)
 	? - prvek je nepotøebný a neopakovatelný
 */
 
-string CMarcAnalyzer::CheckRecord(string Lang)
+std::string CMarcAnalyzer::CheckRecord(std::string Lang)
 {
-    string Errors; //vystup
-	string ControlID; //ID aktuálního pravidla
-	string ControlChar; //Znak vyskytu u aktualniho pravidla pole (?_*+)
-	string ControlID1;
-    string ControlID2;
+    std::string Errors; //vystup
+    std::string ControlID; //ID aktuálního pravidla
+    std::string ControlChar; //Znak vyskytu u aktualniho pravidla pole (?_*+)
+    std::string ControlID1;
+    std::string ControlID2;
     
     //kontrola po polich pro ktere jsou definovana pravidla
     for(int i=0;i<ControlFields.size();i++)
@@ -1869,7 +1869,7 @@ string CMarcAnalyzer::CheckRecord(string Lang)
 		   {
               ControlID=ControlFields[i]->ptrCollSubf[j]->ID->substr(0,1);
 		      ControlChar=ControlFields[i]->ptrCollSubf[j]->ID->substr(1,1);
-		      string Value = *(ControlFields[i]->ptrCollSubf[j]->Value);
+		      std::string Value = *(ControlFields[i]->ptrCollSubf[j]->Value);
 		      int IndexS = ControlFields[i]->ptrCollSubf[j]->Index;
 		      if(ControlID=="E") {
 		         if (IndexS!=0) {
@@ -1880,7 +1880,7 @@ string CMarcAnalyzer::CheckRecord(string Lang)
                              Errors+="#LAB#: Invalid size label(actual size: '" + OrdinalForm(Value.length(),0) + "' required size: '" + OrdinalForm(IndexS, 0) + "')\r\n"; 	   
                     } else {
                         if(Value!="") {
-                           vector<string*> outArray;        
+                           std::vector<std::string*> outArray;        
                            SplitString(&Value,&outArray,",");
                            if(outArray.size()!=IndexS) {
                               if (Lang=="CZE")  
@@ -1889,8 +1889,8 @@ string CMarcAnalyzer::CheckRecord(string Lang)
                                  Errors+="#LAB#:Size of possible values(size='" + OrdinalForm(outArray.size(),0) + "') for possitions in label does not equals size of label(size: '" + OrdinalForm(IndexS, 0) + "')\r\n"; 
                            } else {
                               for(int k=0;k<outArray.size();k++) {
-                                 string controlOnePoss = *(outArray[k]);
-                                 string oneRecChar = g_Label->substr(k,1);
+                                 std::string controlOnePoss = *(outArray[k]);
+                                 std::string oneRecChar = g_Label->substr(k,1);
                                  if (CheckChar(oneRecChar,controlOnePoss)) {
                                    if (Lang=="CZE")
                                       Errors+="#LAB#:Návìští obsahuje špatný znak na pozici '" + OrdinalForm(k,0) + "' (hodnota: '" + oneRecChar + "' možné hodnoty: '" + controlOnePoss + "')\r\n"; 
@@ -1980,12 +1980,12 @@ string CMarcAnalyzer::CheckRecord(string Lang)
      return Errors;
 }
 
-string CMarcAnalyzer::CheckSubfields( CField* ControlF,  CField* RecF, int WithLinking, string Lang)
+std::string CMarcAnalyzer::CheckSubfields( CField* ControlF,  CField* RecF, int WithLinking, std::string Lang)
 {
-    string Errors=""; //vystup
-	string ControlID; //ID aktuálního pravidla
-	string ControlChar; //Znak vyskytu u aktualniho pravidla pole (?_*+)
-    string ControlFieldID=ControlF->ID->substr(0,3);  
+    std::string Errors=""; //vystup
+    std::string ControlID; //ID aktuálního pravidla
+    std::string ControlChar; //Znak vyskytu u aktualniho pravidla pole (?_*+)
+    std::string ControlFieldID=ControlF->ID->substr(0,3);  
     int isall = 0;  
     for(int i=0;i<ControlF->ptrCollSubf.size();i++)
     {
@@ -1995,7 +1995,7 @@ string CMarcAnalyzer::CheckSubfields( CField* ControlF,  CField* RecF, int WithL
           isall = 1;
          
         
-		//if (WithLinking==0) cout << "L:" <<ControlID << "\n";
+		//if (WithLinking==0) std::cout << "L:" <<ControlID << "\n";
 		int NumArr=0; //poèítá výskyty tohoto pole 
 		for(int j=0;j<RecF->ptrCollSubf.size();j++) //procházím vsechny pole
 		{
@@ -2066,7 +2066,7 @@ string CMarcAnalyzer::CheckSubfields( CField* ControlF,  CField* RecF, int WithL
             		  ControlChar=ControlF->ptrCollSubf[i]->ID->substr(1,1);
             		  if(ControlID=="1") {
             		     CField * ControlLinF = ControlF->ptrCollSubf[i]->LinkingField;
-            		     string ContolLinkID = ControlLinF->ID->substr(0,3);  
+            		     std::string ContolLinkID = ControlLinF->ID->substr(0,3);  
             		     if(*(LinF->ID)==ContolLinkID) {
                               //ID1
 			 	              if (CheckChar(*(LinF->ID1),*(ControlLinF->ID1))) {
@@ -2095,10 +2095,10 @@ string CMarcAnalyzer::CheckSubfields( CField* ControlF,  CField* RecF, int WithL
      return Errors;
 }
 
-string CMarcAnalyzer::CheckOneSubfield( string sField, CSubfield* ControlSF,  CSubfield* RecSF, int WithLinking, string Lang)
+std::string CMarcAnalyzer::CheckOneSubfield( std::string sField, CSubfield* ControlSF,  CSubfield* RecSF, int WithLinking, std::string Lang)
 {
-     string Errors=""; 
-     string ControlID=ControlSF->ID->substr(0,1);
+     std::string Errors=""; 
+     std::string ControlID=ControlSF->ID->substr(0,1);
      
      if (ControlSF->Index!=0) {
         if (RecSF->Value->length()!=ControlSF->Index) {
@@ -2109,7 +2109,7 @@ string CMarcAnalyzer::CheckOneSubfield( string sField, CSubfield* ControlSF,  CS
               Errors+="#" + sField + "$" + ControlID + "#: " + "Subfield '" + ControlID + "' contains invalid size(actual size: '" + OrdinalForm(RecSF->Value->length(),0) + "' required size: '" + OrdinalForm(ControlSF->Index, 0) + "') in field '" + sField + "'\r\n"; 	   
         } else {
            if(*(ControlSF->Value)!="") {
-              vector<string*> outArray;        
+              std::vector<std::string*> outArray;        
               SplitString(ControlSF->Value,&outArray,",");
               if(outArray.size()!=ControlSF->Index) {
                  if (WithLinking==0) Errors+="LINKING "; 
@@ -2119,8 +2119,8 @@ string CMarcAnalyzer::CheckOneSubfield( string sField, CSubfield* ControlSF,  CS
                     Errors+="Size of possible values(size='" + OrdinalForm(outArray.size(),0) + "') for possitions in subfields '" + ControlID + "' does not equals size of subfield(size: '" + OrdinalForm(ControlSF->Index, 0) + "') in field '" + sField + "'\r\n"; 
               } else {
                  for(int i=0;i<outArray.size();i++) {
-                    string controlOnePoss = *(outArray[i]);
-                    string oneRecChar = RecSF->Value->substr(i,1);
+                    std::string controlOnePoss = *(outArray[i]);
+                    std::string oneRecChar = RecSF->Value->substr(i,1);
                     if (CheckChar(oneRecChar,controlOnePoss)) {
                        if (WithLinking==0) Errors+="LINKING "; 
                        if (Lang=="CZE")
@@ -2138,10 +2138,10 @@ string CMarcAnalyzer::CheckOneSubfield( string sField, CSubfield* ControlSF,  CS
      return Errors;
 }
 
-int CMarcAnalyzer::CheckChar( string sOneChar, string sCheckString) {
+int CMarcAnalyzer::CheckChar( std::string sOneChar, std::string sCheckString) {
     int found=0;
     for(int h=0;h<sCheckString.length();h++) {
-        string onePoss=sCheckString.substr(h,1);
+        std::string onePoss=sCheckString.substr(h,1);
         if(onePoss==sOneChar) {
            found=1;
         } else {
@@ -2163,11 +2163,11 @@ int CMarcAnalyzer::CheckChar( string sOneChar, string sCheckString) {
  * FUNCTION:     MarkSections
  *
  * DESCRIPTION:  funkce vezme analyzovany text a vyhleda v nìm èásti zaèínající chBegin a konèící chEnd a oznaèí
- *               je ve stejnì dlouhém stringu strMark identifikatory chMarkBegin a chMarkEnd. Je-li promenna iInsertField
+ *               je ve stejnì dlouhém std::stringu strMark identifikatory chMarkBegin a chMarkEnd. Je-li promenna iInsertField
  *               1 oznaèí se vcetne konecneho chEnd
  *
- * PARAMETERS:   (IN)   string* strAnalyzeText - analyzovany text
- *               (OUT)	string* strMarks - oznaèkovaný text
+ * PARAMETERS:   (IN)   std::string* strAnalyzeText - analyzovany text
+ *               (OUT)	std::string* strMarks - oznaèkovaný text
  *               (IN)	char chBegin - hledaný zaèátek
  *               (IN)	char chEnd - hledaný konec
  *               (IN)	char chMarkBegin - znacka zacatku
@@ -2180,7 +2180,7 @@ int CMarcAnalyzer::CheckChar( string sOneChar, string sCheckString) {
  *
  ***********************************************************************/
 
-int CMarcAnalyzer::MarkSections(string* strAnalyzeText, string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
+int CMarcAnalyzer::MarkSections(std::string* strAnalyzeText, std::string* strMarks, char chBegin, char chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
 {
     int iCounter=0;
     int iPossitionStart;
@@ -2213,14 +2213,14 @@ int CMarcAnalyzer::MarkSections(string* strAnalyzeText, string* strMarks, char c
 }
 
 
-int CMarcAnalyzer::MarkSections2(string* strAnalyzeText, string* strMarks, char* chBegin, char* chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
+int CMarcAnalyzer::MarkSections2(std::string* strAnalyzeText, std::string* strMarks, char* chBegin, char* chEnd, char chMarkBegin,  char chMarkEnd, int iInsertEnd)
 {
     int iCounter=0;
     int h;
     int iPossitionStart;
     int iPossitionStop;
-    string chB=chBegin;
-    string chE=chEnd;
+    std::string chB=chBegin;
+    std::string chE=chEnd;
     while (iCounter<strAnalyzeText->length())
     {
         iPossitionStart=strAnalyzeText->find(chB,iCounter);
@@ -2260,7 +2260,7 @@ int CMarcAnalyzer::MarkSections2(string* strAnalyzeText, string* strMarks, char*
  *               sekce zaèínající chMarkBegin a konèící chMarkEnd charem chMarkBegin.Pøi C,N by
  *               vysledek byl XXXXXXXCCCCCCCCCCXXXXNXX
  *
- * PARAMETERS:   (OUT)	string* strMarks - oznaèkovaný text
+ * PARAMETERS:   (OUT)	std::string* strMarks - oznaèkovaný text
  *               (IN)	char chMarkBegin - hledaný zaèátek
  *               (IN)	char chMarkEnd - hledaný konec
  *
@@ -2270,7 +2270,7 @@ int CMarcAnalyzer::MarkSections2(string* strAnalyzeText, string* strMarks, char*
  *
  ***********************************************************************/
 
-int CMarcAnalyzer::FillMarkSection(string* strMark, char chMarkBegin,  char chMarkEnd)
+int CMarcAnalyzer::FillMarkSection(std::string* strMark, char chMarkBegin,  char chMarkEnd)
 {
     int iPossitionStart;
     int iPossitionStop;    
@@ -2305,13 +2305,13 @@ int CMarcAnalyzer::FillMarkSection(string* strMark, char chMarkBegin,  char chMa
  * FUNCTION:     CutCommandByType
  *
  * DESCRIPTION:  funkce vezme analyzovaný a omarkovaný text a vytvoøí pole analyzovaných
- *               stringù a markovacích stringù délky jedna. Funkce analyzovaný text dìlí podle 
- *               identifikovaných sekcí vzniklých vyplnìním markovacího stringu
+ *               std::stringù a markovacích std::stringù délky jedna. Funkce analyzovaný text dìlí podle 
+ *               identifikovaných sekcí vzniklých vyplnìním markovacího std::stringu
  *
- * PARAMETERS:   (IN)    string* strCommand - analyzovaný text
- *               (IN)	 string* strMarkCommand -omarkovaný text
- *               (OUT)	 stringArray *ptrElements - jednotlivé èásti analyzovaného textu podle sekcí
- *               (IN)	 stringArray *ptrMarkElements - markovací stringy délky jedna oznaèující typ sekce
+ * PARAMETERS:   (IN)    std::string* strCommand - analyzovaný text
+ *               (IN)	 std::string* strMarkCommand -omarkovaný text
+ *               (OUT)	 std::stringArray *ptrElements - jednotlivé èásti analyzovaného textu podle sekcí
+ *               (IN)	 std::stringArray *ptrMarkElements - markovací std::stringy délky jedna oznaèující typ sekce
  *
  * AUTOR:        Jindøich Stejskal (Jindrich.Stejskal@seznam.cz)
  * 
@@ -2319,30 +2319,30 @@ int CMarcAnalyzer::FillMarkSection(string* strMark, char chMarkBegin,  char chMa
  *
  ***********************************************************************/
 
-void CMarcAnalyzer::CutCommandByType(string* strCommand, string* strMarkCommand, vector<string *> *ptrElements, vector<string *> *ptrMarkElements)
+void CMarcAnalyzer::CutCommandByType(std::string* strCommand, std::string* strMarkCommand, std::vector<std::string *> *ptrElements, std::vector<std::string *> *ptrMarkElements)
 {
     char chLastChar='J';
     char chNowChar;
     int iElementCounter=-1;
-    string newChar;
+    std::string newChar;
 
     for (int i=0;i<strMarkCommand->length();i++)
     {
         chNowChar=(*strMarkCommand)[i];
-        //cout << chNowChar << "\n";
+        //std::cout << chNowChar << "\n";
         if ((chNowChar!=chLastChar && chNowChar!='*') || i==0)
         {
             iElementCounter++;
             newChar=(*strCommand)[i];
-            ptrElements->push_back(new string(newChar));
+            ptrElements->push_back(new std::string(newChar));
             newChar=(*strMarkCommand)[i];
-            ptrMarkElements->push_back(new string(newChar));
+            ptrMarkElements->push_back(new std::string(newChar));
             chLastChar=chNowChar;
         }
         else
         {
             if(chNowChar=='*') chLastChar='*';
-            string* ptrStr;
+            std::string* ptrStr;
             ptrStr =(*ptrElements)[iElementCounter];
             *ptrStr+=(*strCommand)[i];
             (*ptrElements)[iElementCounter]= ptrStr;
